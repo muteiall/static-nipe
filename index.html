@@ -5,35 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaração de Vínculo - UFG</title>
     <style>
-		@media print {
-		    body {
-		        margin: 0;
-		        padding: 0;
-		    }
-		
-		    .page {
-		        width: 210mm;
-		        box-shadow: none;
-		        margin: 0;
-		        padding: 0;
-		    }
-		
-		    .header, .title, .footer {
-		        page-break-inside: avoid;
-		    }
-		}
+		@page {
+            size: A4;
+            margin: 0;
+        }
+
+        @media print {
+            body, html {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                width: 100%;
+            }
+        
+            .page {
+                /* MUDANÇA IMPORTANTE: */
+                width: 100% !important; /* Em vez de 210mm, usa 100% da área imprimível */
+                min-height: auto !important; /* Remove a altura forçada para não empurrar página extra */
+                margin: 0 !important;
+                padding: 10mm !important; /* Reduz um pouco o padding interno na impressão */
+                box-shadow: none !important;
+                border: none !important;
+            }
+        
+            .header, .title, .footer {
+                page-break-inside: avoid;
+            }
+			
+            /* Esconde elementos desnecessários se houver */
+            .no-print {
+                display: none;
+            }
+        }
 
         body {
             font-family: Helvetica, Arial, sans-serif;
             margin: 0;
-			padding: 0;
+            padding: 0;
             background-color: #f0f0f0;
         }
+        
+        /* O restante do seu CSS para tela (.page, .header, etc) continua aqui... */
         .page {
             background-color: white;
             width: 210mm;
             min-height: 297mm;
-            padding: 0 20mm; /* Margens padrão A4 */
+            padding: 20mm; 
+            margin: 0 auto; /* Centraliza na tela do PC */
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             box-sizing: border-box;
             position: relative;
@@ -42,7 +60,7 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 110px; /* Espaço após o cabeçalho */
+            margin-bottom: 90px; /* Espaço após o cabeçalho */
 			display: flex;
 			align-items: center;
         }
