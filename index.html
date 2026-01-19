@@ -5,145 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaração de Vínculo - UFG</title>
     <style>
-		@page {
-            size: A4;
-            margin: 0;
-        }
-
-        @media print {
-            body, html {
-                margin: 0;
-                padding: 0;
-                height: 100%;
-                width: 100%;
-            }
-        
-            .page {
-                /* MUDANÇA IMPORTANTE: */
-                width: 100% !important; /* Em vez de 210mm, usa 100% da área imprimível */
-                min-height: auto !important; /* Remove a altura forçada para não empurrar página extra */
-                margin: 0 !important;
-                padding: 10mm !important; /* Reduz um pouco o padding interno na impressão */
-                box-shadow: none !important;
-                border: none !important;
-            }
-        
-            .header, .title, .footer {
-                page-break-inside: avoid;
-            }
-			
-            /* Esconde elementos desnecessários se houver */
-            .no-print {
-                display: none;
-            }
-        }
-
+        /* CONFIGURAÇÕES GERAIS */
         body {
             font-family: Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f0f0f0;
         }
-        
-        /* O restante do seu CSS para tela (.page, .header, etc) continua aqui... */
+
+        /* ESTILO VISUAL NA TELA DO PC/CELULAR */
         .page {
             background-color: white;
             width: 210mm;
-            min-height: 297mm;
-            padding: 20mm; 
-            margin: 0 auto; /* Centraliza na tela do PC */
+            min-height: 297mm; /* Altura visual na tela */
+            padding: 20mm;
+            margin: 20px auto;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             box-sizing: border-box;
             position: relative;
-            display: flex;
+            display: flex; /* Flexbox funciona bem na tela */
             flex-direction: column;
         }
+
         .header {
             text-align: center;
-            margin-bottom: 90px; /* Espaço após o cabeçalho */
-			display: flex;
-			align-items: center;
+            margin-bottom: 60px; /* Reduzido um pouco */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
         .header img {
-            width: 130px; /* Tamanho ajustado do logo */
-            margin-bottom: 15px;
-			margin-top: -10px;
+            width: 110px;
+            margin-right: 15px;
         }
+
         .header-text {
             font-weight: 700;
-            font-size: 19px;
+            font-size: 16px; /* Ajuste leve de fonte */
             line-height: 1.3;
             text-transform: uppercase;
-			margin-left: 20px;
-			text-align: left;
+            text-align: left;
         }
+
         .title {
             text-align: center;
             font-weight: bold;
-            font-size: 17px;
-            margin-bottom: 120px; /* Espaço igual entre Título e Texto */
-			letter-spacing: 10px;
+            font-size: 18px;
+            margin-bottom: 60px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
         }
+
         .content {
             text-align: justify;
-            line-height: 1.6; /* Espaçamento de linha confortável para leitura */
-            font-size: 16px;
-            margin-bottom: 5px;
+            line-height: 1.6;
+            font-size: 15px;
+            margin-bottom: 40px;
         }
+
         .status-options {
-            margin-left: 0;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.8;
-            margin-bottom: 40px; /* Espaço maior antes da data */
-			display: flex;
-			gap: 10px;
+            margin-bottom: 40px;
         }
+
         .date {
             text-align: center;
-            font-size: 17px;
-            margin-bottom: 115px; /* Empurra o rodapé para o final se houver espaço */
+            font-size: 16px;
+            margin-top: auto; /* Empurra para baixo na tela */
+            margin-bottom: 80px;
         }
+
         .footer {
             border-top: 1px solid #999;
-            padding-top: 1cqi;
-            margin-top: 50px;
+            padding-top: 15px;
             font-size: 11px;
             text-align: center;
             color: #333;
             line-height: 1.4;
         }
+
         .verification-box {
             border: 1px dashed #666;
             padding: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: inline-block;
             font-family: "Courier New", monospace;
             background-color: #f9f9f9;
-            font-size: 13px;
+            font-size: 12px;
         }
 
-		@media print {
-    /* ... regras anteriores ... */
-    
-    .header { margin-bottom: 40px !important; }
-    .title { margin-bottom: 60px !important; }
-    .date { margin-bottom: 60px !important; }
-}
+        /* --- MÁGICA DA IMPRESSÃO (CORREÇÃO IPHONE) --- */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0; /* Zera margens da impressora */
+            }
 
+            html, body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+                background-color: white;
+                /* Impede rolagem ou vazamento */
+                overflow: hidden; 
+            }
+
+            .page {
+                /* Desliga Flexbox na impressão (Causa do erro no iOS) */
+                display: block !important; 
+                width: 100% !important;
+                height: auto !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+                padding: 15mm 15mm !important; /* Margem segura */
+                box-shadow: none !important;
+                border: none !important;
+                page-break-inside: avoid;
+            }
+
+            /* Reduz espaçamentos verticais para garantir que caiba em 1 página */
+            .header { margin-bottom: 30px !important; }
+            .title { margin-bottom: 40px !important; }
+            .content { margin-bottom: 20px !important; font-size: 14px !important; }
+            .status-options { margin-bottom: 30px !important; font-size: 14px !important; }
+            
+            /* Ajuste posicional do rodapé para não quebrar página */
+            .date { 
+                margin-bottom: 40px !important; 
+                margin-top: 20px !important;
+            }
+            
+            .footer {
+                page-break-inside: avoid;
+            }
+
+            /* Esconde botão de download na impressão se houver */
+            #downloadPdf {
+                cursor: default;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div 
-		class="page"
-		id="downloadPdf"
-		style="cursor: pointer;"
-	>
+    <div class="page" onclick="window.print()">
+        
         <div class="header">
-            <img 
-			    src="img.png" 
-			    alt="Brasão UFG"
-			>
+            <img src="img.png" alt="Brasão UFG">
             <div class="header-text">
                 UNIVERSIDADE FEDERAL DE GOIÁS<br>
                 PRÓ-REITORIA DE GRADUAÇÃO<br>
@@ -158,19 +169,17 @@
         </div>
 
         <div class="status-options">
-			<div>
-				Situação do vínculo:
-			</div>
-			<div>
-				( <strong>X</strong> ) Matriculado em disciplinas/módulos<br>
-				( &nbsp;&nbsp; ) Matrícula trancada<br>
-				( &nbsp;&nbsp; ) Participante de mobilidade acadêmica.
-			</div>
+            <div>Situação do vínculo:</div>
+            <div style="margin-top: 10px;">
+                ( <strong>X</strong> ) Matriculado em disciplinas/módulos<br>
+                ( &nbsp;&nbsp; ) Matrícula trancada<br>
+                ( &nbsp;&nbsp; ) Participante de mobilidade acadêmica.
+            </div>
         </div>
 
-		<div class="date" id="current-date">
-		    UNIVERSIDADE FEDERAL DE GOIÁS, em Goiânia,
-		</div>
+        <div class="date" id="current-date">
+            UNIVERSIDADE FEDERAL DE GOIÁS, em Goiânia,
+        </div>
 
         <div class="footer">
             <div class="verification-box">
@@ -183,29 +192,13 @@
             </div>
         </div>
     </div>
-	<script>
-		//Inserir data atual formatada
-    	const dateElement = document.getElementById("current-date");
-		
-    	const today = new Date();
-		
-    	const options = {
-    	    day: '2-digit',
-    	    month: 'long',
-    	    year: 'numeric'
-    	};
-	
-    	const formattedDate = today.toLocaleDateString('pt-BR', options);
-	
-    	dateElement.innerHTML += " " + formattedDate + ".";
 
-
-		//Baixar documento em PDF
-		const logo = document.getElementById("downloadPdf");
-
-    	logo.addEventListener("click", () => {
-    	    window.print();
-    	});
-	</script>
+    <script>
+        const dateElement = document.getElementById("current-date");
+        const today = new Date();
+        const options = { day: '2-digit', month: 'long', year: 'numeric' };
+        const formattedDate = today.toLocaleDateString('pt-BR', options);
+        dateElement.innerHTML += " " + formattedDate + ".";
+    </script>
 </body>
 </html>
