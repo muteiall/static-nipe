@@ -23,6 +23,7 @@
 		        page-break-inside: avoid;
 		    }
 		}
+
         body {
             font-family: Helvetica, Arial, sans-serif;
             margin: 0;
@@ -62,7 +63,7 @@
             text-align: center;
             font-weight: bold;
             font-size: 17px;
-            margin-bottom: 130px; /* Espaço igual entre Título e Texto */
+            margin-bottom: 120px; /* Espaço igual entre Título e Texto */
 			letter-spacing: 10px;
         }
         .content {
@@ -82,7 +83,7 @@
         .date {
             text-align: center;
             font-size: 17px;
-            margin-bottom: 135px; /* Empurra o rodapé para o final se houver espaço */
+            margin-bottom: 115px; /* Empurra o rodapé para o final se houver espaço */
         }
         .footer {
             border-top: 1px solid #999;
@@ -102,6 +103,7 @@
             background-color: #f9f9f9;
             font-size: 13px;
         }
+
     </style>
 </head>
 <body>
@@ -170,19 +172,14 @@
     	const formattedDate = today.toLocaleDateString('pt-BR', options);
 	
     	dateElement.innerHTML += " " + formattedDate + ".";
-	</script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-	<script>
+
+		//Baixar documento em PDF
 		const logo = document.getElementById("downloadPdf");
 
-		logo.addEventListener("click", () => {
-    		const element = document.getElementById("downloadPdf");
-    		html2pdf()
-      		.set({ margin: 10, filename: 'declaracao.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } })
-      		.from(element)
-      		.save();
-		});
+    	logo.addEventListener("click", () => {
+    	    window.print();
+    	});
 	</script>
 </body>
 </html>
