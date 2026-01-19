@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaração de Vínculo - UFG</title>
     <style>
+		@media print {
+		    body {
+		        margin: 0;
+		        padding: 0;
+		    }
+		
+		    .page {
+		        width: 210mm;
+		        min-height: 297mm;
+		        box-shadow: none;
+		        margin: 0;
+		        padding: 0;
+		    }
+		
+		    .header, .title, .footer {
+		        page-break-inside: avoid;
+		    }
+		}
         body {
             font-family: Helvetica, Arial, sans-serif;
             margin: 0;
@@ -152,14 +170,19 @@
     	const formattedDate = today.toLocaleDateString('pt-BR', options);
 	
     	dateElement.innerHTML += " " + formattedDate + ".";
+	</script>
 
-
-		//Baixar documento em PDF
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+	<script>
 		const logo = document.getElementById("downloadPdf");
 
-    	logo.addEventListener("click", () => {
-    	    window.print();
-    	});
+		logo.addEventListener("click", () => {
+    		const element = document.getElementById("downloadPdf");
+    		html2pdf()
+      		.set({ margin: 10, filename: 'declaracao.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } })
+      		.from(element)
+      		.save();
+		});
 	</script>
 </body>
 </html>
