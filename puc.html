@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atestado de Matrícula - PUC-SP</title>
+    <style>
+        /* --- ESTILOS GERAIS --- */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            color: #000;
+        }
+
+        .page {
+            background-color: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* --- CABEÇALHO --- */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header img {
+            width: 80px; 
+            margin-right: 15px;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            font-family: Georgia, "Times New Roman", Times, serif;
+            text-align: left;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .header p {
+            font-size: 13px;
+            margin: 0;
+            font-weight: normal;
+            color: #333;
+        }
+
+        /* --- TÍTULO DO DOCUMENTO --- */
+        .doc-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-decoration: underline;
+        }
+
+        /* --- CONTEÚDO --- */
+        .content {
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            margin-bottom: 15px;
+            text-indent: 30px; 
+        }
+
+        /* --- TABELA DE DISCIPLINAS --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-bottom: 40px;
+            margin-top: 10px;
+        }
+
+        table th, table td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        table th {
+            background-color: #eee;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* --- RODAPÉ E RECONHECIMENTO --- */
+        .recognition-text {
+            font-size: 10px;
+            text-align: justify;
+            margin-bottom: 40px;
+            margin-top: 20px;
+        }
+
+        .date-place {
+            text-align: right;
+            font-size: 14px;
+            margin-bottom: 60px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            position: absolute;
+            bottom: 20mm;
+            left: 20mm;
+            right: 20mm;
+        }
+
+        /* --- CORREÇÃO PARA IPHONE E IMPRESSÃO --- */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            body, html {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+                background-color: white;
+                overflow: hidden; 
+            }
+
+            .page {
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 15mm 15mm !important; 
+                box-shadow: none !important;
+                border: none !important;
+                display: block !important; 
+            }
+
+            .header { margin-bottom: 30px !important; }
+            .doc-title { margin-bottom: 30px !important; }
+            .footer { position: fixed; bottom: 10mm; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page" onclick="window.print()">
+        
+        <div class="header">
+            <img src="img2.png" alt="Brasão PUC-SP">
+
+            <div class="header-text">
+                <h1>Pontifícia Universidade Católica de São Paulo</h1>
+                <p>Recredenciada pela Portaria do MEC N°622 de 17 de maio de 2012, DOU de 18/05/2012.</p>
+            </div>
+        </div>
+
+        <div class="doc-title">Atestado de Matrícula</div>
+
+        <div class="content">
+            <p>
+                Atestamos, para os devidos fins, que <strong id="nome-aluno-puc">FABIO PAULO REIS DE SANTANA</strong>, matrícula <strong>RA00220323</strong>, é aluno(a) desta Universidade, tendo ingressado em <span id="entry-year"></span>.
+            </p>
+            <p>
+                Atestamos, ainda, que o(a) referido(a) aluno(a) encontra-se matriculado(a) no turno <strong>INTEGRAL</strong> do curso de <strong>Doutorado em DIREITO: EFETIVIDADE DO DIREITO</strong> e que efetuou matrícula no <strong id="semester-txt"></strong> nas seguintes disciplinas:
+            </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Código</th>
+                    <th style="width: 40%;">Nome da Disciplina</th>
+                    <th style="width: 15%;">Turma</th>
+                    <th style="width: 20%;">Horário</th>
+                    <th style="width: 15%;">Período</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center;">P06325</td>
+                    <td>TRANSFORMAÇÕES CONTEMPORÂNEAS DA ADMINISTRAÇÃO PÚBLICA E SUAS IMPLICAÇÕES NA DOGMATICA DO DIREITO AD</td>
+                    <td style="text-align: center;">DIR02MA-NADM</td>
+                    <td style="text-align: center;">TER 07:30 às 12:30</td>
+                    <td style="text-align: center;" id="class-period"></td> 
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="recognition-text">
+            Reconhecido pela Portaria MEC 656/17-DOU_23/05/2017- nº 97/ seção nº 1/ pag. 14. Republicada no DOU em 27/07/2017
+        </div>
+
+        <div class="date-place" id="current-date-place">
+            </div>
+
+        <div class="footer">
+            Rua Monte Alegre, 984 - São Paulo-SP - CEP:05014-901 - Fone (11) 3670-8000<br>
+            <strong>http://www.pucsp.br</strong>
+        </div>
+
+    </div>
+
+    <script>
+        // SCRIPT PRINCIPAL QUE RODA AO ABRIR A PÁGINA
+        (function initPage() {
+            
+            // 1. CAPTURAR NOME DA URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeNaUrl = urlParams.get('nome'); 
+
+            if (nomeNaUrl) {
+                // Se veio nome na URL, substitui o padrão (mantendo maiúsculo)
+                document.getElementById("nome-aluno-puc").innerText = nomeNaUrl.toUpperCase();
+            }
+
+            // 2. DATAS E SEMESTRES (Lógica original mantida)
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth(); 
+            
+            // Data de hoje
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const fullDate = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('current-date-place').innerHTML = `São Paulo, ${fullDate}`;
+
+            // Ano de Ingresso (Atual - 2)
+            const entryYearCalc = year - 2;
+            document.getElementById('entry-year').innerText = entryYearCalc;
+
+            // Semestre
+            let semesterText = "";
+            let classStart = "";
+            let classEnd = "";
+
+            if (month < 6) { // 1º Semestre
+                semesterText = `1º semestre do ano de ${year}`;
+                classStart = `12/02/${year}`;
+                classEnd = `28/06/${year}`;
+            } else { // 2º Semestre
+                semesterText = `2º semestre do ano de ${year}`;
+                classStart = `05/08/${year}`;
+                classEnd = `15/12/${year}`;
+            }
+
+            document.getElementById('semester-txt').innerText = semesterText;
+            document.getElementById('class-period').innerHTML = `${classStart}<br>a<br>${classEnd}`;
+
+        })();
+    </script>
+</body>
+</html>

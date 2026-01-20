@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaração Anhanguera</title>
+    <style>
+        /* --- RESET E CONFIGURAÇÕES BÁSICAS --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* --- FOLHA A4 --- */
+        .page {
+            position: relative;
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            overflow: hidden; /* Essencial para iOS */
+        }
+
+        /* --- CAMADA 1: IMAGEM DE FUNDO --- */
+        .background-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .background-layer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- CAMADA 2: TEXTO --- */
+        .text-layer {
+            position: relative;
+            z-index: 1;
+            /* Ajuste o Padding-Top conforme sua imagem de fundo */
+            padding-top: 80mm; 
+            padding-left: 25mm;
+            padding-right: 25mm;
+            color: #000;
+        }
+
+        /* --- FORMATAÇÃO DO TEXTO --- */
+        h1.titulo {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .titulo-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        p.corpo-texto {
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 130px;
+        }
+
+        .data-local {
+            text-align: end; 
+            font-size: 16px;
+            margin-bottom: 190px;
+        }
+
+        .assinatura {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* --- IMPRESSÃO --- */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            body, html {
+                width: 210mm;
+                height: 297mm;
+                background-color: white;
+            }
+            .page {
+                margin: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                display: block !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page" onclick="window.print()">
+        
+        <div class="background-layer">
+            <img src="fundo.jpg" alt="Fundo">
+        </div>
+
+        <div class="text-layer">
+            
+            <div class="titulo-container">
+                <h1 class="titulo">DECLARAÇÃO</h1>
+            </div>
+
+            <p class="corpo-texto">
+                Declaro, para os devidos fins, que <strong id="nome-aluno-anhanguera">JOCELINE ENCARNAÇÃO DE MOURA</strong>,
+                MATRÍCULA: <strong>2637012301</strong> é aluna matriculada no curso de <strong>Educação Física</strong>
+                <strong id="dynamic-semester"></strong>, no Polo da Anhanguera Educacional de <strong>São Paulo/SP</strong>.
+            </p>
+
+            <div class="data-local" id="dynamic-date">
+                </div>
+
+            <div class="assinatura">
+                Auristela Gelocha – Secretária Acadêmica do Polo
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        (function autoUpdate() {
+            
+            // --- 1. LÓGICA DE CAPTURA DE NOME (URL) ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeNaUrl = urlParams.get('nome');
+
+            if (nomeNaUrl) {
+                // Substitui o nome padrão pelo digitado no menu
+                document.getElementById("nome-aluno-anhanguera").innerText = nomeNaUrl.toUpperCase();
+            }
+
+            // --- 2. LÓGICA DE DATAS E SEMESTRES ---
+            const now = new Date();
+            const day = now.getDate();
+            const year = now.getFullYear();
+            const monthIndex = now.getMonth(); 
+            
+            const months = [
+                "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+                "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+            ];
+
+            // Semestre
+            let semesterText = "";
+            if (monthIndex < 6) {
+                semesterText = "1º semestre";
+            } else {
+                semesterText = "2º semestre";
+            }
+            
+            // Data com SÃO PAULO
+            const fullDateText = `São Paulo, ${day} de ${months[monthIndex]} de ${year}.`;
+
+            document.getElementById("dynamic-semester").innerText = semesterText;
+            document.getElementById("dynamic-date").innerText = fullDateText;
+
+        })();
+    </script>
+</body>
+</html>
