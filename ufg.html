@@ -1,615 +1,308 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
-
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Declaração de Vínculo - UFG</title>
-
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-
-
     <style>
-
         /* --- ESTILOS GERAIS --- */
-
         body {
-
             font-family: Arial, Helvetica, sans-serif;
-
             background-color: #333;
-
             margin: 0;
-
             padding: 20px;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             overflow-x: auto;
-
         }
-
-
 
         /* --- BOTÕES E INTERFACE --- */
-
         .btn-container {
-
             position: fixed;
-
             top: 0;
-
             left: 0;
-
             width: 100%;
-
             background: rgba(0, 0, 0, 0.95);
-
             padding: 15px;
-
             text-align: center;
-
             z-index: 999;
-
             display: flex;
-
             justify-content: center;
-
             gap: 15px;
-
         }
-
-
 
         .btn-download {
-
             background-color: #ff6600;
-
             color: white;
-
             border: none;
-
             padding: 12px 25px;
-
             font-size: 14px;
-
             border-radius: 5px;
-
             cursor: pointer;
-
             font-weight: bold;
-
             text-transform: uppercase;
-
         }
-
-
 
         .btn-download:disabled {
-
             background-color: #555;
-
             cursor: wait;
-
         }
-
-
 
         .btn-back {
-
             background-color: #666;
-
             color: white;
-
             border: none;
-
             padding: 12px 25px;
-
             font-size: 14px;
-
             border-radius: 5px;
-
             cursor: pointer;
-
             font-weight: bold;
-
             text-decoration: none;
-
             text-transform: uppercase;
-
             display: flex;
-
             align-items: center;
-
         }
-
-
 
         .spacer {
-
             height: 80px;
-
             width: 100%;
-
         }
-
-
 
         /* --- FOLHA A4 --- */
-
         .page {
-
             background-color: white;
-
             width: 210mm;
-
             min-height: 297mm;
-
             padding: 25mm 30mm;
-
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-
             box-sizing: border-box;
-
             position: relative;
-
             display: flex;
-
             flex-direction: column;
-
             margin: 0 auto;
-
         }
-
-
 
         /* --- CABEÇALHO --- */
-
         .header {
-
             text-align: center;
-
             margin-bottom: 50px;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
         }
-
-
 
         .header img {
-
             width: 90px;
-
             margin-right: 20px;
-
         }
-
-
 
         .header-text {
-
             font-weight: 700;
-
             font-size: 14px;
-
             line-height: 1.4;
-
             text-transform: uppercase;
-
             text-align: left;
-
             color: #000;
-
         }
-
-
 
         /* --- TÍTULO --- */
-
         .title {
-
             text-align: center;
-
             font-weight: bold;
-
             font-size: 18px;
-
             margin-bottom: 50px;
-
             text-transform: uppercase;
-
             text-decoration: underline;
-
         }
-
-
 
         /* --- CONTEÚDO --- */
-
         .content {
-
             text-align: justify;
-
             line-height: 1.6;
-
             font-size: 14px;
-
             margin-bottom: 40px;
-
             color: #000;
-
         }
-
-
 
         /* --- OPÇÕES DE STATUS --- */
-
         .status-options {
-
             margin-left: 0;
-
             font-size: 14px;
-
             line-height: 2;
-
             margin-bottom: 60px;
-
         }
-
-
 
         /* --- DATA --- */
-
         .date {
-
             text-align: right;
-
             font-size: 14px;
-
             margin-top: auto;
-
             margin-bottom: 50px;
-
         }
-
-
 
         /* --- RODAPÉ --- */
-
         .footer {
-
             border-top: 1px solid #000;
-
             padding-top: 15px;
-
             font-size: 11px;
-
             text-align: center;
-
             color: #333;
-
             line-height: 1.4;
-
         }
-
-
 
         .verification-box {
-
             border: 1px dashed #000;
-
             padding: 8px 15px;
-
             margin-bottom: 15px;
-
             display: inline-block;
-
             font-family: "Courier New", monospace;
-
             background-color: #eee;
-
             font-size: 12px;
-
             font-weight: bold;
-
         }
-
     </style>
-
 </head>
-
-
 
 <body>
 
-
-
     <div class="btn-container">
-
         <a href="index.html" class="btn-back">⬅ Voltar</a>
-
         <button class="btn-download" onclick="baixarPDF()">📥 BAIXAR PDF</button>
-
     </div>
-
-
 
     <div class="spacer"></div>
 
-
-
     <div class="page" id="conteudo-para-pdf">
-
         
-
         <div class="header">
-
             <img src="img.png" alt="Brasão UFG" />
-
             <div class="header-text">
-
                 UNIVERSIDADE FEDERAL DE GOIÁS<br />
-
                 PRÓ-REITORIA DE GRADUAÇÃO<br />
-
                 CENTRO DE GESTÃO ACADÊMICA
-
             </div>
-
         </div>
-
-
 
         <div class="title">DECLARAÇÃO DE VÍNCULO</div>
 
-
-
         <div class="content">
-
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Atestamos que o estudante
-
             <strong id="nome-aluno">CHERLAU DA SILVA PRADO FILHO</strong>, CPF N°
-
             <strong>470.775.328-01</strong>, matrícula Nº
-
             <strong id="matricula-dinamica"></strong> ingressou nesta Universidade,
-
             via SISTEMA DE SELEÇÃO UNIFICADA - SISU, em
-
             <strong id="ano-sisu"></strong> e encontra-se regularmente vinculado ao
-
             curso de graduação de
-
             <strong>SISTEMAS DE INFORMAÇÃO - BACHARELADO - PRESENCIAL - GOIÂNIA</strong>, 
-
             turno <strong>NOTURNO</strong>.
-
         </div>
-
-
 
         <div class="status-options">
-
             <div><strong>Situação do vínculo:</strong></div>
-
             <div>
-
                 ( <strong>X</strong> ) Matriculado em disciplinas/módulos<br />
-
                 ( &nbsp;&nbsp; ) Matrícula trancada<br />
-
                 ( &nbsp;&nbsp; ) Participante de mobilidade acadêmica.
-
             </div>
-
         </div>
-
-
 
         <div class="date" id="current-date">Goiânia, </div>
 
-
-
         <div class="footer">
-
             <div class="verification-box">Código de verificação: aobdea4b81</div>
-
             <div>
-
                 Para verificar a autenticidade deste documento acesse:<br />
-
                 <strong>https://sigaa.sistemas.ufg.br/sigaa/documentos</strong><br />
-
                 informando a matrícula, data de emissão e o código verificador.
-
             </div>
-
         </div>
-
     </div>
 
-
-
     <script>
-
         // 1. PREENCHIMENTO DE DADOS
-
         (function initPage() {
-
             // Nome vindo da URL
-
             const urlParams = new URLSearchParams(window.location.search);
-
             const nomeNaUrl = urlParams.get("nome");
 
-
-
             if (nomeNaUrl) {
-
                 document.getElementById("nome-aluno").innerText = nomeNaUrl.toUpperCase();
-
             }
 
-
-
             // Datas e Anos
-
             const today = new Date();
-
             const currentYear = today.getFullYear();
-
             
-
             // Cálculo: Ano Atual - 2 anos
-
             const anoIngresso = currentYear - 2;
 
-
-
             // Preencher Matrícula (Ex: 202408911) e Ano SiSU (Ex: 2024.1)
-
             document.getElementById("matricula-dinamica").innerText = `${anoIngresso}08921`;
-
             document.getElementById("ano-sisu").innerText = `${anoIngresso}.1`;
 
-
-
             // Data formatada do rodapé
-
             const dateElement = document.getElementById("current-date");
-
             const options = {
-
                 day: "2-digit",
-
                 month: "long",
-
                 year: "numeric",
-
             };
-
             const formattedDate = today.toLocaleDateString("pt-BR", options);
-
             
-
             // Adiciona a data ao texto "Goiânia, "
-
             dateElement.innerHTML += formattedDate + ".";
-
         })();
 
-
-
         // 2. DOWNLOAD PDF
-
         function baixarPDF() {
-
             const btn = document.querySelector(".btn-download");
-
             const textoOriginal = btn.innerText;
 
-
-
             btn.innerText = "⏳ GERANDO PDF...";
-
             btn.disabled = true;
 
-
-
             const element = document.getElementById("conteudo-para-pdf");
-
             window.scrollTo(0, 0);
 
-
-
             const opt = {
-
                 margin: 0,
-
                 filename: "declaracao-ufg.pdf",
-
                 image: { type: "jpeg", quality: 0.98 },
-
                 html2canvas: {
-
                     scale: 2,
-
                     useCORS: true,
-
                     scrollY: 0,
-
                     windowWidth: 794, // Largura fixa para manter layout
-
                 },
-
                 jsPDF: {
-
                     unit: "mm",
-
                     format: "a4",
-
                     orientation: "portrait",
-
                     compress: true,
-
                 },
-
             };
 
-
-
             html2pdf()
-
                 .set(opt)
-
                 .from(element)
-
                 .save()
-
                 .then(() => {
-
                     btn.innerText = textoOriginal;
-
                     btn.disabled = false;
-
                 })
-
                 .catch((err) => {
-
                     console.error(err);
-
                     alert("Erro ao gerar PDF.");
-
                     btn.innerText = textoOriginal;
-
                     btn.disabled = false;
-
                 });
-
         }
-
     </script>
-
 </body>
-
-
 
 </html>
