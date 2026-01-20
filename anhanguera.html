@@ -12,71 +12,62 @@
         body {
             margin: 0;
             padding: 20px;
-            background-color: #f0f0f0;
+            background-color: #333; /* Fundo escuro para destacar a folha */
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: auto; /* Permite rolagem lateral */
         }
 
-        /* --- BOTÃO DE DOWNLOAD --- */
+        /* --- BOTÃO --- */
+        .btn-container {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(0,0,0,0.9); padding: 15px;
+            text-align: center; z-index: 999;
+        }
         .btn-download {
             background-color: #ff6600; /* Laranja Anhanguera */
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            font-weight: bold;
+            color: white; border: none;
+            padding: 12px 30px; font-size: 16px; border-radius: 5px;
+            cursor: pointer; font-weight: bold;
         }
-        .btn-download:disabled {
-            background-color: #666;
-            cursor: wait;
-        }
-        .btn-download:active {
-            transform: scale(0.98);
-        }
+        .btn-download:disabled { background-color: #555; cursor: wait; }
+        .spacer { height: 80px; width: 100%; }
 
         /* --- FOLHA A4 --- */
         .page {
             position: relative;
-            width: 210mm;
+            /* Tamanho fixo A4 */
+            width: 210mm; 
             min-height: 297mm;
             background-color: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             overflow: hidden; 
+            margin: 0 auto;
         }
 
-        /* --- CAMADA 1: IMAGEM DE FUNDO --- */
+        /* --- FUNDO --- */
         .background-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; z-index: 0;
         }
-
         .background-layer img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100%; height: 100%; object-fit: cover;
         }
 
-        /* --- CAMADA 2: TEXTO --- */
+        /* --- TEXTO --- */
         .text-layer {
             position: relative;
             z-index: 1;
+            /* Ajustes de margem da imagem original */
             padding-top: 80mm; 
             padding-left: 25mm;
             padding-right: 25mm;
             color: #000;
         }
 
-        /* --- FORMATAÇÃO DO TEXTO --- */
+        /* --- FORMATAÇÃO --- */
         h1.titulo {
             text-align: center;
             font-size: 24px;
@@ -85,11 +76,7 @@
             margin-bottom: 40px;
             color: #333;
         }
-
-        .titulo-container {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+        .titulo-container { text-align: center; margin-bottom: 40px; }
 
         p.corpo-texto {
             font-size: 16px;
@@ -109,28 +96,21 @@
             font-size: 14px;
             font-weight: bold;
         }
-
-        /* Ajuste apenas para visualização em telas pequenas */
-        @media (max-width: 800px) {
-            .page {
-                transform: scale(0.45);
-                transform-origin: top center;
-                margin-bottom: -150mm; 
-            }
-        }
     </style>
 </head>
 <body>
 
-    <button class="btn-download" onclick="baixarPDF()">
-        📥 BAIXAR DECLARAÇÃO (PDF)
-    </button>
+    <div class="btn-container">
+        <button class="btn-download" onclick="baixarPDF()">
+            📥 BAIXAR DECLARAÇÃO (ANHANGUERA)
+        </button>
+    </div>
+    <div class="spacer"></div>
 
     <div class="page" id="conteudo-para-pdf">
         
         <div class="background-layer">
-            <img src="fundo.jpg" alt="Fundo">
-        </div>
+            <img src="fundo.jpg" alt="Fundo"> </div>
 
         <div class="text-layer">
             
@@ -181,13 +161,11 @@
             document.getElementById("dynamic-date").innerText = fullDateText;
         })();
 
-        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (iOS)
+        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (ESCALA CORRETA)
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
-            
-            // Feedback Visual
-            btn.innerText = "⏳ GERANDO PDF... AGUARDE";
+            btn.innerText = "⏳ GERANDO PDF...";
             btn.disabled = true;
 
             const elemento = document.getElementById('conteudo-para-pdf');
@@ -196,18 +174,19 @@
             const options = {
                 margin:       0,
                 filename:     'declaracao-anhanguera.pdf',
-                image:        { type: 'jpeg', quality: 0.95 },
+                image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
-                    scale: 1.2,      // ESCALA REDUZIDA PARA EVITAR CRASH NO IPHONE
-                    useCORS: true, 
+                    scale: 2,       
+                    useCORS: true,  
                     scrollY: 0,
-                    logging: false
+                    // O SEGREDO: windowWidth 800 corrige o tamanho no celular
+                    windowWidth: 800 
                 },
                 jsPDF:        { 
                     unit: 'mm', 
                     format: 'a4', 
                     orientation: 'portrait',
-                    compress: true // Otimização
+                    compress: true 
                 }
             };
 
