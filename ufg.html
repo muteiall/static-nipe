@@ -208,7 +208,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             
             // Preenche NOME
-            const nomeNaUrl = urlParams.get("nome");
+            const nomeNaUrl = urlParams.get("nome")?.trim();
             if (nomeNaUrl) {
                 document.getElementById("nome-aluno").innerText = nomeNaUrl.toUpperCase();
             }
