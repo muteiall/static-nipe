@@ -11,48 +11,64 @@
         /* --- ESTILOS GERAIS --- */
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #333; /* Fundo escuro para destacar a folha */
             margin: 0;
             padding: 20px;
             color: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
+            /* Permite rolagem horizontal no celular para ver a folha toda */
+            overflow-x: auto; 
         }
 
         /* --- BOTÃO DE DOWNLOAD --- */
+        .btn-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            text-align: center;
+            z-index: 999;
+        }
+
         .btn-download {
             background-color: #003366; /* Azul PUC */
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 25px;
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             font-weight: bold;
         }
         .btn-download:disabled {
             background-color: #666;
             cursor: wait;
         }
-        .btn-download:active {
-            transform: scale(0.98);
+
+        /* Espaço para não cobrir o topo da folha com o botão */
+        .spacer {
+            height: 60px; 
+            width: 100%;
         }
 
         /* --- FOLHA A4 --- */
         .page {
             background-color: white;
-            width: 210mm;
+            /* TAMANHO FIXO A4 */
+            width: 210mm; 
             min-height: 297mm;
             padding: 20mm;
             margin: 0 auto;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             box-sizing: border-box;
             position: relative;
             
-            /* SOLUÇÃO FLEXBOX PARA O RODAPÉ */
+            /* FLEXBOX PARA O RODAPÉ */
             display: flex;
             flex-direction: column;
         }
@@ -162,21 +178,18 @@
             width: 100%;
         }
 
-        /* Ajuste visual para celular (apenas visualização) */
-        @media (max-width: 800px) {
-            .page {
-                transform: scale(0.45);
-                transform-origin: top center;
-                margin-bottom: -150mm;
-            }
-        }
+        /* REMOVI O MEDIA QUERY QUE DIMINUÍA A FOLHA */
+        /* Agora a folha fica tamanho real e você rola para ver */
     </style>
 </head>
 <body>
 
-    <button class="btn-download" onclick="baixarPDF()">
-        📥 BAIXAR ATESTADO (PDF)
-    </button>
+    <div class="btn-container">
+        <button class="btn-download" onclick="baixarPDF()">
+            📥 BAIXAR PDF (PUC-SP)
+        </button>
+    </div>
+    <div class="spacer"></div>
 
     <div class="page" id="conteudo-para-pdf">
         
@@ -236,78 +249,60 @@
     </div>
 
     <script>
-        // 1. LÓGICA DE DADOS (Nome, Data, Semestre)
+        // 1. LÓGICA DE DADOS
         (function initPage() {
-            
-            // Captura Nome da URL
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome'); 
             if (nomeNaUrl) {
                 document.getElementById("nome-aluno-puc").innerText = nomeNaUrl.toUpperCase();
             }
 
-            // Datas e Semestres
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth(); 
             
-            // Data atual
             const options = { day: 'numeric', month: 'long', year: 'numeric' };
             const fullDate = now.toLocaleDateString('pt-BR', options);
             document.getElementById('current-date-place').innerHTML = `São Paulo, ${fullDate}`;
 
-            // Ano de Ingresso (Ano atual - 2)
             const entryYearCalc = year - 2;
             document.getElementById('entry-year').innerText = entryYearCalc;
 
-            // Semestre
-            let semesterText = "";
-            let classStart = "";
-            let classEnd = "";
-
-            if (month < 6) { // 1º Semestre
-                semesterText = `1º semestre do ano de ${year}`;
-                classStart = `12/02/${year}`;
-                classEnd = `28/06/${year}`;
-            } else { // 2º Semestre
-                semesterText = `2º semestre do ano de ${year}`;
-                classStart = `05/08/${year}`;
-                classEnd = `15/12/${year}`;
-            }
+            let semesterText = (month < 6) ? `1º semestre do ano de ${year}` : `2º semestre do ano de ${year}`;
+            let classStart = (month < 6) ? `12/02/${year}` : `05/08/${year}`;
+            let classEnd = (month < 6) ? `28/06/${year}` : `15/12/${year}`;
 
             document.getElementById('semester-txt').innerText = semesterText;
             document.getElementById('class-period').innerHTML = `${classStart}<br>a<br>${classEnd}`;
         })();
 
-        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (iOS)
+        // 2. FUNÇÃO DE DOWNLOAD OTIMIZADA (CORREÇÃO DA ESCALA)
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
-
-            // Feedback Visual
-            btn.innerText = "⏳ GERANDO PDF... AGUARDE";
+            btn.innerText = "⏳ PROCESSANDO PDF...";
             btn.disabled = true;
 
             const element = document.getElementById('conteudo-para-pdf');
             
-            // Rola para o topo para evitar cortes
+            // Rola para o topo
             window.scrollTo(0,0);
 
             const opt = {
                 margin:       0,
                 filename:     'atestado-matricula-puc.pdf',
-                image:        { type: 'jpeg', quality: 0.95 },
+                image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
-                    scale: 1.2,      // ESCALA REDUZIDA: O SEGREDO DO IPHONE
+                    scale: 2, /* Qualidade boa */
                     scrollY: 0, 
                     useCORS: true,
-                    logging: false
+                    windowWidth: 800 /* O TRUQUE: Finje que a tela é larga (Desktop) */
                 },
                 jsPDF:        { 
                     unit: 'mm', 
                     format: 'a4', 
                     orientation: 'portrait',
-                    compress: true // Otimização
+                    compress: true
                 }
             };
 
@@ -318,7 +313,7 @@
             })
             .catch(err => {
                 console.error(err);
-                alert("Erro ao gerar PDF. Tente atualizar a página.");
+                alert("Erro ao gerar PDF.");
                 btn.innerText = textoOriginal;
                 btn.disabled = false;
             });
