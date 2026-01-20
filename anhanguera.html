@@ -12,34 +12,50 @@
         body {
             margin: 0;
             padding: 20px;
-            background-color: #333; /* Fundo escuro para destacar a folha */
+            background-color: #333; /* Fundo escuro */
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: auto; /* Permite rolagem lateral */
+            overflow-x: auto;
         }
 
-        /* --- BOTÃO --- */
+        /* --- BARRA DE BOTÕES --- */
         .btn-container {
             position: fixed; top: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.9); padding: 15px;
+            background: rgba(0,0,0,0.95); padding: 15px;
             text-align: center; z-index: 999;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
         }
+
+        /* Botão Download (Laranja) */
         .btn-download {
-            background-color: #ff6600; /* Laranja Anhanguera */
-            color: white; border: none;
-            padding: 12px 30px; font-size: 16px; border-radius: 5px;
+            background-color: #ff6600; color: white; border: none;
+            padding: 12px 25px; font-size: 14px; border-radius: 5px;
             cursor: pointer; font-weight: bold;
+            text-transform: uppercase;
         }
-        .btn-download:disabled { background-color: #555; cursor: wait; }
+        .btn-download:disabled { background-color: #666; cursor: wait; }
+
+        /* Botão Voltar (Cinza) */
+        .btn-back {
+            background-color: #666; color: white; border: none;
+            padding: 12px 25px; font-size: 14px; border-radius: 5px;
+            cursor: pointer; font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            display: flex; align-items: center;
+        }
+        .btn-back:hover { background-color: #888; }
+
         .spacer { height: 80px; width: 100%; }
 
         /* --- FOLHA A4 --- */
         .page {
             position: relative;
-            /* Tamanho fixo A4 */
-            width: 210mm; 
+            width: 210mm;
             min-height: 297mm;
             background-color: white;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
@@ -60,7 +76,6 @@
         .text-layer {
             position: relative;
             z-index: 1;
-            /* Ajustes de margem da imagem original */
             padding-top: 80mm; 
             padding-left: 25mm;
             padding-right: 25mm;
@@ -101,16 +116,20 @@
 <body>
 
     <div class="btn-container">
+        <a href="menu.html" class="btn-back">⬅ Voltar</a>
+        
         <button class="btn-download" onclick="baixarPDF()">
-            📥 BAIXAR DECLARAÇÃO (ANHANGUERA)
+            📥 Baixar PDF
         </button>
     </div>
+    
     <div class="spacer"></div>
 
     <div class="page" id="conteudo-para-pdf">
         
         <div class="background-layer">
-            <img src="fundo.jpg" alt="Fundo"> </div>
+            <img src="fundo.jpg" alt="Fundo">
+        </div>
 
         <div class="text-layer">
             
@@ -161,14 +180,14 @@
             document.getElementById("dynamic-date").innerText = fullDateText;
         })();
 
-        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (ESCALA CORRETA)
+        // 2. DOWNLOAD PDF (CORRIGIDO PARA ESCALA CORRETA)
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
             btn.innerText = "⏳ GERANDO PDF...";
             btn.disabled = true;
 
-            const elemento = document.getElementById('conteudo-para-pdf');
+            const element = document.getElementById('conteudo-para-pdf');
             window.scrollTo(0,0);
 
             const options = {
@@ -205,4 +224,3 @@
     </script>
 </body>
 </html>
-
