@@ -4,52 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaração de Vínculo - UFG</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-
-            .page {
-                width: 210mm;
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
-            }
-
-            .header, .title, .footer {
-                page-break-inside: avoid;
-            }
-        }
-
+        /* --- ESTILOS GERAIS --- */
         body {
             font-family: Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
+        /* --- BOTÃO DE DOWNLOAD --- */
+        .btn-download {
+            background-color: #005c35; /* Verde UFG aproximado */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        .btn-download:active {
+            transform: scale(0.98);
+        }
+
+        /* --- FOLHA A4 --- */
         .page {
             background-color: white;
             width: 210mm;
             min-height: 297mm;
             padding: 0 20mm; /* Margens padrão A4 */
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
             box-sizing: border-box;
             position: relative;
             display: flex;
             flex-direction: column;
             margin: 0 auto;
         }
+
+        /* --- ELEMENTOS DO DOCUMENTO --- */
         .header {
             text-align: center;
-            margin-bottom: 100px; /* Espaço após o cabeçalho */
+            margin-bottom: 100px;
             display: flex;
             align-items: center;
             margin-top: -10px;
         }
         .header img {
-            width: 130px; /* Tamanho ajustado do logo */
+            width: 130px;
             margin-bottom: 15px;
         }
         .header-text {
@@ -64,12 +74,12 @@
             text-align: center;
             font-weight: bold;
             font-size: 17px;
-            margin-bottom: 130px; /* Espaço igual entre Título e Texto */
+            margin-bottom: 130px;
             letter-spacing: 10px;
         }
         .content {
             text-align: justify;
-            line-height: 1.6; /* Espaçamento de linha confortável para leitura */
+            line-height: 1.6;
             font-size: 16px;
             margin-bottom: 5px;
         }
@@ -77,14 +87,14 @@
             margin-left: 0;
             font-size: 16px;
             line-height: 1.8;
-            margin-bottom: 40px; /* Espaço maior antes da data */
+            margin-bottom: 40px;
             display: flex;
             gap: 10px;
         }
         .date {
             text-align: center;
             font-size: 17px;
-            margin-bottom: 135px; /* Empurra o rodapé para o final se houver espaço */
+            margin-bottom: 135px;
         }
         .footer {
             border-top: 1px solid #999;
@@ -96,32 +106,32 @@
             line-height: 1.4;
         }
         .verification-box {
-            border: 1px dashed #666;
             padding: 8px;
             margin-bottom: 15px;
             display: inline-block;
-            font-family: "Courier New", monospace;
-            background-color: #f9f9f9;
             font-size: 13px;
         }
-        @media print {
-            body { background-color: white; padding: 0; }
-            .page { box-shadow: none; width: 100%; margin: 0; padding: 5mm 20mm; min-height: auto; }
+
+        /* Ajuste visual para celular (apenas preview) */
+        @media (max-width: 800px) {
+            .page {
+                transform: scale(0.45);
+                transform-origin: top center;
+                margin-bottom: -150mm;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div 
-        class="page"
-        id="downloadPdf"
-        style="cursor: pointer;"
-    >
+    <button class="btn-download" onclick="baixarPDF()">
+        📥 BAIXAR DECLARAÇÃO (PDF)
+    </button>
+
+    <div class="page" id="conteudo-para-pdf">
+        
         <div class="header">
-            <img 
-                src="img.png" 
-                alt="Brasão UFG"
-            >
+            <img src="img.png" alt="Brasão UFG">
             <div class="header-text">
                 UNIVERSIDADE FEDERAL DE GOIÁS<br>
                 PRÓ-REITORIA DE GRADUAÇÃO<br>
@@ -152,7 +162,7 @@
 
         <div class="footer">
             <div class="verification-box">
-                <strong>Código de verificação:</strong> aobdea4b81
+                <strong>Código de verificação:</strong> aobdea4b8
             </div>
             <div>
                 Para verificar a autenticidade deste documento acesse<br>
@@ -161,33 +171,49 @@
             </div>
         </div>
     </div>
+
     <script>
-        // 1. LÓGICA PARA PEGAR O NOME DA URL E SUBSTITUIR
-        const urlParams = new URLSearchParams(window.location.search);
-        const nomeNaUrl = urlParams.get('nome'); // Pega o valor de ?nome=...
+        // 1. LÓGICA DE DADOS (Nome e Data)
+        (function initPage() {
+            // Pega nome da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeNaUrl = urlParams.get('nome'); 
 
-        if (nomeNaUrl) {
-            // Se existir nome na URL, substitui o conteúdo do ID 'nome-aluno'
-            // O .toUpperCase() garante que fique tudo maiúsculo como no original
-            document.getElementById("nome-aluno").innerText = nomeNaUrl.toUpperCase();
+            if (nomeNaUrl) {
+                document.getElementById("nome-aluno").innerText = nomeNaUrl.toUpperCase();
+            }
+
+            // Data atual
+            const dateElement = document.getElementById("current-date");
+            const today = new Date();
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            const formattedDate = today.toLocaleDateString('pt-BR', options);
+            dateElement.innerHTML += " " + formattedDate + ".";
+        })();
+
+        // 2. FUNÇÃO DE DOWNLOAD DO PDF
+        function baixarPDF() {
+            const element = document.getElementById('conteudo-para-pdf');
+            
+            const opt = {
+                margin:       0,
+                filename:     'declaracao-ufg.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    scrollY: 0, 
+                    useCORS: true 
+                },
+                jsPDF:        { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait',
+                    compress: true // Essencial para iOS
+                }
+            };
+
+            html2pdf().set(opt).from(element).save();
         }
-
-        // 2. Inserir data atual formatada (Seu código original)
-        const dateElement = document.getElementById("current-date");
-        const today = new Date();
-        const options = {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric'
-        };
-        const formattedDate = today.toLocaleDateString('pt-BR', options);
-        dateElement.innerHTML += " " + formattedDate + ".";
-
-        // 3. Baixar documento em PDF
-        const logo = document.getElementById("downloadPdf");
-        logo.addEventListener("click", () => {
-            window.print();
-        });
     </script>
 </body>
 </html>
