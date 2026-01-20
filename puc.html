@@ -10,65 +10,43 @@
     <style>
         /* --- ESTILOS GERAIS --- */
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #333; /* Fundo escuro para destacar a folha */
+            /* MUDANÇA 1: Fonte Serifada igual ao documento original */
+            font-family: "Times New Roman", Times, serif;
+            background-color: #333;
             margin: 0;
             padding: 20px;
             color: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Permite rolagem horizontal no celular para ver a folha toda */
-            overflow-x: auto; 
+            overflow-x: auto;
         }
 
-        /* --- BOTÃO DE DOWNLOAD --- */
+        /* --- BOTÃO --- */
         .btn-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.8);
-            padding: 10px;
-            text-align: center;
-            z-index: 999;
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(0,0,0,0.8); padding: 10px;
+            text-align: center; z-index: 999;
         }
-
         .btn-download {
-            background-color: #003366; /* Azul PUC */
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            font-weight: bold;
+            background-color: #003366; color: white; border: none;
+            padding: 10px 20px; font-size: 14px; border-radius: 4px;
+            cursor: pointer; font-family: Arial, sans-serif; font-weight: bold;
         }
-        .btn-download:disabled {
-            background-color: #666;
-            cursor: wait;
-        }
-
-        /* Espaço para não cobrir o topo da folha com o botão */
-        .spacer {
-            height: 60px; 
-            width: 100%;
-        }
+        .btn-download:disabled { background-color: #666; cursor: wait; }
+        .spacer { height: 60px; width: 100%; }
 
         /* --- FOLHA A4 --- */
         .page {
             background-color: white;
-            /* TAMANHO FIXO A4 */
-            width: 210mm; 
+            width: 210mm;
             min-height: 297mm;
-            padding: 20mm;
+            /* MUDANÇA 2: Margens ajustadas para a proporção correta */
+            padding: 20mm 25mm; 
             margin: 0 auto;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             box-sizing: border-box;
             position: relative;
-            
-            /* FLEXBOX PARA O RODAPÉ */
             display: flex;
             flex-direction: column;
         }
@@ -76,14 +54,14 @@
         /* --- CABEÇALHO --- */
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px; /* Reduzido */
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .header img {
-            width: 80px; 
+            width: 60px; /* Logo menor e mais discreto */
             margin-right: 15px;
         }
 
@@ -91,95 +69,112 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            justify-content: center;
-            font-family: Georgia, "Times New Roman", Times, serif;
             text-align: left;
         }
 
         .header h1 {
-            font-size: 18px;
-            margin: 0 0 5px 0;
+            /* MUDANÇA 3: Tamanho reduzido drasticamente (de 18px para 13px) */
+            font-size: 13px;
+            margin: 0 0 3px 0;
             text-transform: uppercase;
+            font-weight: bold;
             line-height: 1.2;
+            color: #000;
         }
 
         .header p {
-            font-size: 13px;
+            font-size: 10px; /* Reduzido de 13px para 10px */
             margin: 0;
-            font-weight: normal;
             color: #333;
+            max-width: 350px; /* Limita largura para quebrar linha igual imagem */
+            line-height: 1.1;
         }
 
-        /* --- TÍTULO DO DOCUMENTO --- */
+        /* --- TÍTULO --- */
         .doc-title {
             text-align: center;
-            font-size: 22px;
+            font-size: 14px; /* Reduzido de 22px para 14px */
             font-weight: bold;
-            margin-bottom: 40px;
-            text-decoration: underline;
+            margin-bottom: 30px;
+            /* No original da PUC geralmente não tem sublinhado no título principal, mas mantive negrito */
         }
 
         /* --- CONTEÚDO --- */
         .content {
-            font-size: 14px;
+            font-size: 12px; /* Fonte do texto corrida (padrão documento) */
             line-height: 1.5;
             text-align: justify;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .content p {
-            margin-bottom: 15px;
-            text-indent: 30px; 
+            margin-bottom: 12px;
+            text-indent: 0; /* A PUC geralmente não usa indentação na primeira linha nesse modelo, ou usa pouco */
+        }
+        
+        /* Ajuste para alinhar o "Atestamos..." com margem ou indentação */
+        .paragraph-start {
+            text-indent: 30px;
+            display: block;
         }
 
-        /* --- TABELA DE DISCIPLINAS --- */
+        /* --- TABELA --- */
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
-            margin-bottom: 40px;
-            margin-top: 10px;
+            font-size: 9px; /* Tabela bem pequena */
+            margin-bottom: 20px;
+            margin-top: 5px;
         }
 
         table th, table td {
             border: 1px solid #000;
-            padding: 5px;
+            padding: 4px 6px;
             text-align: left;
-            vertical-align: top;
+            vertical-align: middle;
         }
 
         table th {
-            background-color: #eee;
+            background-color: #f0f0f0; /* Cinza bem claro */
             font-weight: bold;
             text-align: center;
+            text-transform: capitalize;
         }
 
-        /* --- RODAPÉ E RECONHECIMENTO --- */
+        /* --- TEXTOS LEGAIS E DATA --- */
         .recognition-text {
-            font-size: 10px;
+            font-size: 9px;
             text-align: justify;
-            margin-bottom: 40px;
-            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-top: 10px;
+            line-height: 1.3;
         }
 
         .date-place {
             text-align: right;
-            font-size: 14px;
-            margin-bottom: 40px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            margin-top: 10px;
         }
 
-        /* --- RODAPÉ FLEXÍVEL --- */
+        /* --- RODAPÉ --- */
         .footer {
             text-align: center;
-            font-size: 11px;
+            font-size: 10px;
             border-top: 1px solid #000;
-            padding-top: 10px;
+            padding-top: 8px;
             margin-top: auto; 
-            width: 100%;
+            width: 80%; /* Linha não vai até o fim da página no original */
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.3;
         }
-
-        /* REMOVI O MEDIA QUERY QUE DIMINUÍA A FOLHA */
-        /* Agora a folha fica tamanho real e você rola para ver */
+        
+        .footer a {
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -194,9 +189,7 @@
     <div class="page" id="conteudo-para-pdf">
         
         <div class="header">
-            <img src="img2.png" alt="Brasão PUC-SP">
-
-            <div class="header-text">
+            <img src="img2.png" alt="Brasão PUC-SP"> <div class="header-text">
                 <h1>Pontifícia Universidade Católica de São Paulo</h1>
                 <p>Recredenciada pela Portaria do MEC N°622 de 17 de maio de 2012, DOU de 18/05/2012.</p>
             </div>
@@ -205,10 +198,10 @@
         <div class="doc-title">Atestado de Matrícula</div>
 
         <div class="content">
-            <p>
+            <p class="paragraph-start">
                 Atestamos, para os devidos fins, que <strong id="nome-aluno-puc">FABIO PAULO REIS DE SANTANA</strong>, matrícula <strong>RA00220323</strong>, é aluno(a) desta Universidade, tendo ingressado em <span id="entry-year"></span>.
             </p>
-            <p>
+            <p class="paragraph-start">
                 Atestamos, ainda, que o(a) referido(a) aluno(a) encontra-se matriculado(a) no turno <strong>INTEGRAL</strong> do curso de <strong>Doutorado em DIREITO: EFETIVIDADE DO DIREITO</strong> e que efetuou matrícula no <strong id="semester-txt"></strong> nas seguintes disciplinas:
             </p>
         </div>
@@ -216,11 +209,11 @@
         <table>
             <thead>
                 <tr>
-                    <th style="width: 10%;">Código</th>
-                    <th style="width: 40%;">Nome da Disciplina</th>
+                    <th style="width: 8%;">Código</th>
+                    <th style="width: 45%;">Nome da Disciplina</th>
                     <th style="width: 15%;">Turma</th>
                     <th style="width: 20%;">Horário</th>
-                    <th style="width: 15%;">Período</th>
+                    <th style="width: 12%;">Período</th>
                 </tr>
             </thead>
             <tbody>
@@ -243,7 +236,7 @@
 
         <div class="footer">
             Rua Monte Alegre, 984 - São Paulo-SP - CEP:05014-901 - Fone (11) 3670-8000<br>
-            <strong>http://www.pucsp.br</strong>
+            <a href="http://www.pucsp.br">http://www.pucsp.br</a>
         </div>
 
     </div>
@@ -276,16 +269,14 @@
             document.getElementById('class-period').innerHTML = `${classStart}<br>a<br>${classEnd}`;
         })();
 
-        // 2. FUNÇÃO DE DOWNLOAD OTIMIZADA (CORREÇÃO DA ESCALA)
+        // 2. DOWNLOAD PDF (CONFIGURADO PARA NÃO AUMENTAR FONTE)
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
-            btn.innerText = "⏳ PROCESSANDO PDF...";
+            btn.innerText = "⏳ PROCESSANDO...";
             btn.disabled = true;
 
             const element = document.getElementById('conteudo-para-pdf');
-            
-            // Rola para o topo
             window.scrollTo(0,0);
 
             const opt = {
@@ -293,10 +284,10 @@
                 filename:     'atestado-matricula-puc.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
-                    scale: 2, /* Qualidade boa */
+                    scale: 2, 
                     scrollY: 0, 
                     useCORS: true,
-                    windowWidth: 800 /* O TRUQUE: Finje que a tela é larga (Desktop) */
+                    windowWidth: 794 // Largura exata A4 em pixels (96dpi) para evitar zoom
                 },
                 jsPDF:        { 
                     unit: 'mm', 
