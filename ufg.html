@@ -13,33 +13,53 @@
             font-family: Arial, Helvetica, sans-serif;
             background-color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 20px; /* Padding extra para não cortar a folha */
             display: flex;
             flex-direction: column;
             align-items: center;
             overflow-x: auto;
         }
 
-        /* --- BOTÃO --- */
+        /* --- BARRA DE BOTÕES --- */
         .btn-container {
             position: fixed; top: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.9); padding: 15px;
-            text-align: center; z-index: 999;
+            background: rgba(0,0,0,0.95); padding: 15px;
+            z-index: 999;
+            /* Flexbox para alinhar os botões */
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
+
+        /* Botão de Download (Verde) */
         .btn-download {
             background-color: #005c35; color: white; border: none;
-            padding: 12px 30px; font-size: 16px; border-radius: 5px;
+            padding: 12px 25px; font-size: 14px; border-radius: 5px;
             cursor: pointer; font-weight: bold;
+            text-transform: uppercase;
         }
         .btn-download:disabled { background-color: #555; cursor: wait; }
+
+        /* Botão de Voltar (Cinza/Neutro) */
+        .btn-back {
+            background-color: #666; color: white; border: none;
+            padding: 12px 25px; font-size: 14px; border-radius: 5px;
+            cursor: pointer; font-weight: bold;
+            text-decoration: none; /* Remove sublinhado do link */
+            display: flex; align-items: center;
+            text-transform: uppercase;
+        }
+        .btn-back:hover { background-color: #888; }
+
         .spacer { height: 80px; width: 100%; }
 
         /* --- FOLHA A4 --- */
         .page {
             background-color: white;
-            width: 210mm;
+            width: 210mm; 
             min-height: 297mm;
-            padding: 25mm 30mm;
+            padding: 25mm 25mm; 
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             box-sizing: border-box;
             position: relative;
@@ -50,19 +70,19 @@
 
         /* --- CABEÇALHO --- */
         .header {
-            text-align: center;
+            text-align: start;
             margin-bottom: 50px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: start;
         }
         .header img {
-            width: 90px;
-            margin-right: 20px;
+            width: 130px;
+            margin-right: 13px;
         }
         .header-text {
             font-weight: 700;
-            font-size: 14px;
+            font-size: 18px;
             line-height: 1.4;
             text-transform: uppercase;
             text-align: left;
@@ -73,54 +93,51 @@
         .title {
             text-align: center;
             font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 50px;
-            text-transform: uppercase;
-            text-decoration: underline;
+            font-size: 13px;
+            margin-bottom: 100px;
+            letter-spacing: 10px;
         }
 
         /* --- CONTEÚDO --- */
         .content {
-            text-align: justify;
             line-height: 1.6;
-            font-size: 14px;
+            font-size: 12px;
             margin-bottom: 40px;
             color: #000;
+            text-align: justify;
         }
 
         /* --- OPÇÕES DE STATUS --- */
         .status-options {
             margin-left: 0;
-            font-size: 14px;
-            line-height: 2;
-            margin-bottom: 60px;
+            font-size: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 5px;
         }
         
         /* --- DATA --- */
         .date {
-            text-align: right;
-            font-size: 14px;
+            text-align: center;
+            font-size: 10px;
             margin-top: auto; 
-            margin-bottom: 50px;
+            margin-bottom: 70px;
         }
 
         /* --- RODAPÉ --- */
         .footer {
-            border-top: 1px solid #000;
             padding-top: 15px;
-            font-size: 11px;
+            font-size: 10px;
             text-align: center;
             color: #333;
             line-height: 1.4;
         }
+
         .verification-box {
-            border: 1px dashed #000;
             padding: 8px 15px;
             margin-bottom: 15px;
             display: inline-block;
-            font-family: "Courier New", monospace;
-            background-color: #eee;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
         }
     </style>
@@ -128,10 +145,13 @@
 <body>
 
     <div class="btn-container">
+        <a href="menu.html" class="btn-back">⬅ Voltar</a>
+        
         <button class="btn-download" onclick="baixarPDF()">
-            📥 BAIXAR DECLARAÇÃO (UFG)
+            📥 Baixar PDF
         </button>
     </div>
+    
     <div class="spacer"></div>
 
     <div class="page" id="conteudo-para-pdf">
@@ -193,7 +213,7 @@
             // Cálculo: Ano Atual - 2 anos
             const anoIngresso = currentYear - 2;
 
-            // Preencher Matrícula (Ex: 202408911) e Ano SiSU (Ex: 2024.1)
+            // Preencher Matrícula e Ano SiSU
             document.getElementById("matricula-dinamica").innerText = `${anoIngresso}08921`;
             document.getElementById("ano-sisu").innerText = `${anoIngresso}.1`;
 
@@ -204,7 +224,7 @@
             dateElement.innerHTML += formattedDate + ".";
         })();
 
-        // 2. DOWNLOAD PDF (CORRIGIDO)
+        // 2. DOWNLOAD PDF
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
