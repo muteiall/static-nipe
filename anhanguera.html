@@ -191,7 +191,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             
             // NOME
-            const nomeNaUrl = urlParams.get('nome');
+            const nomeNaUrl = urlParams.get('nome')?.trim();
             if (nomeNaUrl) {
                 document.getElementById("nome-aluno-anhanguera").innerText = nomeNaUrl.toUpperCase();
             }
@@ -280,6 +280,7 @@
 </body>
 
 </html>
+
 
 
 
