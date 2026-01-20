@@ -265,10 +265,24 @@
 
             html2pdf().set(opt).from(element).save()
                 .then(() => {
+                    // SUCESSO!
                     btn.innerText = textoOriginal;
                     btn.disabled = false;
+
+                    // DETECÇÃO: É iOS? E é realmente o Safari (não é Chrome/Firefox)?
+                    const ua = navigator.userAgent;
+    
+                    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+                    const isSafari = /Safari/i.test(ua);
+                    const isChrome = /CriOS/i.test(ua) || /Chrome/i.test(ua); // CriOS é o Chrome no iOS
+                    const isFirefox = /FxiOS/i.test(ua); // FxiOS é o Firefox no iOS
+
+                    // Só mostra o alerta se for iOS E Safari (e não for Chrome nem Firefox)
+                    if (isIOS && isSafari && !isChrome && !isFirefox) {
+                        alert("✅ PDF Gerado!\n\nSe o arquivo abriu na tela:\n1. Toque em Compartilhar (⬆️)\n2. Escolha 'Salvar em Arquivos'");
+                    }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.error(err);
                     alert("Erro ao gerar PDF.");
                     btn.innerText = textoOriginal;
