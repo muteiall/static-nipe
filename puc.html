@@ -58,7 +58,7 @@
         .page {
             background-color: white;
             width: 210mm;
-            min-height: 297mm;
+            height: 296mm;
             /* Margens ajustadas para a proporção correta */
             padding: 20mm 25mm; 
             margin: 0 auto;
@@ -314,14 +314,22 @@
                 }
             };
 
-            html2pdf().set(opt).from(element).save()
+            // Gera o PDF
+            html2pdf().set(options).from(elemento).save()
             .then(() => {
+                // SUCESSO: Restaura o botão
                 btn.innerText = textoOriginal;
                 btn.disabled = false;
+
+                // DETECTA IPHONE/IPAD E MOSTRA INSTRUÇÃO
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                if (isIOS) {
+                    alert("📄 PDF Gerado!\n\nSe o download não iniciou:\n1. Toque no botão 'Compartilhar' (quadrado com seta ⬆️)\n2. Escolha 'Salvar em Arquivos'");
+                }
             })
             .catch(err => {
                 console.error(err);
-                alert("Erro ao gerar PDF.");
+                alert("Erro ao gerar PDF. Tente atualizar a página.");
                 btn.innerText = textoOriginal;
                 btn.disabled = false;
             });
@@ -329,3 +337,4 @@
     </script>
 </body>
 </html>
+
