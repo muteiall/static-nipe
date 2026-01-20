@@ -32,6 +32,10 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             font-weight: bold;
         }
+        .btn-download:disabled {
+            background-color: #666;
+            cursor: wait;
+        }
         .btn-download:active {
             transform: scale(0.98);
         }
@@ -151,10 +155,8 @@
     </div>
 
     <script>
-        // 1. PREENCHIMENTO AUTOMÁTICO (NOME E DATAS)
+        // 1. PREENCHIMENTO AUTOMÁTICO
         (function autoUpdate() {
-            
-            // Captura de Nome da URL
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome');
 
@@ -162,7 +164,6 @@
                 document.getElementById("nome-aluno-anhanguera").innerText = nomeNaUrl.toUpperCase();
             }
 
-            // Datas e Semestres
             const now = new Date();
             const day = now.getDate();
             const year = now.getFullYear();
@@ -178,31 +179,49 @@
 
             document.getElementById("dynamic-semester").innerText = semesterText;
             document.getElementById("dynamic-date").innerText = fullDateText;
-
         })();
 
-        // 2. FUNÇÃO DE DOWNLOAD DO PDF
+        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (iOS)
         function baixarPDF() {
-            const elemento = document.getElementById('conteudo-para-pdf');
+            const btn = document.querySelector('.btn-download');
+            const textoOriginal = btn.innerText;
             
+            // Feedback Visual
+            btn.innerText = "⏳ GERANDO PDF... AGUARDE";
+            btn.disabled = true;
+
+            const elemento = document.getElementById('conteudo-para-pdf');
+            window.scrollTo(0,0);
+
             const options = {
                 margin:       0,
                 filename:     'declaracao-anhanguera.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
+                image:        { type: 'jpeg', quality: 0.95 },
                 html2canvas:  { 
-                    scale: 2,       // Alta resolução
-                    useCORS: true,  // Permite carregar a imagem de fundo corretamente
-                    scrollY: 0 
+                    scale: 1.2,      // ESCALA REDUZIDA PARA EVITAR CRASH NO IPHONE
+                    useCORS: true, 
+                    scrollY: 0,
+                    logging: false
                 },
                 jsPDF:        { 
                     unit: 'mm', 
                     format: 'a4', 
                     orientation: 'portrait',
-                    compress: true // Otimização para iOS
+                    compress: true // Otimização
                 }
             };
 
-            html2pdf().set(options).from(elemento).save();
+            html2pdf().set(options).from(elemento).save()
+            .then(() => {
+                btn.innerText = textoOriginal;
+                btn.disabled = false;
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro ao gerar PDF.");
+                btn.innerText = textoOriginal;
+                btn.disabled = false;
+            });
         }
     </script>
 </body>
