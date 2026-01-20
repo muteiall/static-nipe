@@ -10,43 +10,40 @@
     <style>
         /* --- ESTILOS GERAIS --- */
         body {
+            /* Fonte Padrão UFG: Arial/Helvetica (Sem serifa) */
             font-family: Helvetica, Arial, sans-serif;
+            background-color: #333;
             margin: 0;
             padding: 20px;
-            background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: auto; /* Permite rolagem no celular */
         }
 
         /* --- BOTÃO DE DOWNLOAD --- */
+        .btn-container {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(0,0,0,0.8); padding: 10px;
+            text-align: center; z-index: 999;
+        }
         .btn-download {
             background-color: #005c35; /* Verde UFG */
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            font-weight: bold;
+            color: white; border: none;
+            padding: 10px 20px; font-size: 14px; border-radius: 4px;
+            cursor: pointer; font-weight: bold;
         }
-        .btn-download:disabled {
-            background-color: #666;
-            cursor: wait;
-        }
-        .btn-download:active {
-            transform: scale(0.98);
-        }
+        .btn-download:disabled { background-color: #666; cursor: wait; }
+        .spacer { height: 60px; width: 100%; }
 
         /* --- FOLHA A4 --- */
         .page {
             background-color: white;
             width: 210mm;
             min-height: 297mm;
-            padding: 0 20mm; 
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            /* Margens padrão A4 ajustadas */
+            padding: 20mm 25mm; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             box-sizing: border-box;
             position: relative;
             display: flex;
@@ -54,86 +51,91 @@
             margin: 0 auto;
         }
 
-        /* --- ELEMENTOS DO DOCUMENTO --- */
+        /* --- CABEÇALHO --- */
         .header {
             text-align: center;
-            margin-bottom: 100px;
+            margin-bottom: 40px;
             display: flex;
             align-items: center;
-            margin-top: -10px;
+            justify-content: center;
         }
         .header img {
-            width: 130px;
-            margin-bottom: 15px;
+            width: 80px; /* Logo menor e proporcional */
+            margin-right: 15px;
         }
         .header-text {
             font-weight: 700;
-            font-size: 19px;
+            font-size: 13px; /* Reduzido */
             line-height: 1.3;
             text-transform: uppercase;
-            margin-left: 20px;
             text-align: left;
+            color: #333;
         }
+
+        /* --- TÍTULO --- */
         .title {
             text-align: center;
             font-weight: bold;
-            font-size: 17px;
-            margin-bottom: 130px;
-            letter-spacing: 10px;
+            font-size: 14px; /* Reduzido */
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
+
+        /* --- CONTEÚDO --- */
         .content {
             text-align: justify;
-            line-height: 1.6;
-            font-size: 16px;
-            margin-bottom: 5px;
+            line-height: 1.5;
+            font-size: 12px; /* Tamanho ideal de leitura A4 */
+            margin-bottom: 30px;
+            color: #000;
         }
+
+        /* --- OPÇÕES DE STATUS --- */
         .status-options {
             margin-left: 0;
-            font-size: 16px;
+            font-size: 12px;
             line-height: 1.8;
-            margin-bottom: 40px;
-            display: flex;
-            gap: 10px;
+            margin-bottom: 50px;
         }
+        
+        /* --- DATA --- */
         .date {
             text-align: center;
-            font-size: 17px;
-            margin-bottom: 135px;
+            font-size: 12px;
+            margin-top: auto; /* Empurra para baixo */
+            margin-bottom: 40px;
         }
+
+        /* --- RODAPÉ --- */
         .footer {
             border-top: 1px solid #999;
-            padding-top: 20px;
-            margin-top: 40px;
-            font-size: 11px;
+            padding-top: 10px;
+            font-size: 9px; /* Fonte pequena de rodapé */
             text-align: center;
             color: #333;
-            line-height: 1.4;
+            line-height: 1.3;
         }
+
         .verification-box {
             border: 1px dashed #666;
-            padding: 8px;
-            margin-bottom: 15px;
+            padding: 5px 10px;
+            margin-bottom: 10px;
             display: inline-block;
             font-family: "Courier New", monospace;
             background-color: #f9f9f9;
-            font-size: 13px;
-        }
-
-        /* Ajuste visual para celular (apenas visualização) */
-        @media (max-width: 800px) {
-            .page {
-                transform: scale(0.45);
-                transform-origin: top center;
-                margin-bottom: -150mm;
-            }
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
 
-    <button class="btn-download" onclick="baixarPDF()">
-        📥 BAIXAR DECLARAÇÃO (PDF)
-    </button>
+    <div class="btn-container">
+        <button class="btn-download" onclick="baixarPDF()">
+            📥 BAIXAR DECLARAÇÃO (UFG)
+        </button>
+    </div>
+    <div class="spacer"></div>
 
     <div class="page" id="conteudo-para-pdf">
         
@@ -154,9 +156,9 @@
 
         <div class="status-options">
             <div>
-                Situação do vínculo:
+                <strong>Situação do vínculo:</strong>
             </div>
-            <div>
+            <div style="margin-top: 5px;">
                 ( <strong>X</strong> ) Matriculado em disciplinas/módulos<br>
                 ( &nbsp;&nbsp; ) Matrícula trancada<br>
                 ( &nbsp;&nbsp; ) Participante de mobilidade acadêmica.
@@ -180,7 +182,7 @@
     </div>
 
     <script>
-        // 1. PREENCHIMENTO AUTOMÁTICO (Nome e Data)
+        // 1. LÓGICA DE DADOS
         (function initPage() {
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome'); 
@@ -191,40 +193,36 @@
 
             const dateElement = document.getElementById("current-date");
             const today = new Date();
-            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
             const formattedDate = today.toLocaleDateString('pt-BR', options);
             dateElement.innerHTML += " " + formattedDate + ".";
         })();
 
-        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (iOS)
+        // 2. DOWNLOAD PDF (AJUSTADO PARA ESCALA CORRETA NO IPHONE)
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
-            
-            // Feedback Visual
-            btn.innerText = "⏳ GERANDO PDF... AGUARDE";
+            btn.innerText = "⏳ PROCESSANDO...";
             btn.disabled = true;
 
             const element = document.getElementById('conteudo-para-pdf');
-            
-            // Rola para o topo para evitar cortes
             window.scrollTo(0,0);
 
             const opt = {
                 margin:       0,
                 filename:     'declaracao-ufg.pdf',
-                image:        { type: 'jpeg', quality: 0.95 },
+                image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
-                    scale: 1.2,      // ESCALA REDUZIDA PARA EVITAR CRASH
+                    scale: 2, 
                     scrollY: 0, 
                     useCORS: true,
-                    logging: false
+                    windowWidth: 794 // TRUQUE: Força largura A4 (96dpi) para proporção perfeita
                 },
                 jsPDF:        { 
                     unit: 'mm', 
                     format: 'a4', 
                     orientation: 'portrait',
-                    compress: true // ESSENCIAL PARA IOS
+                    compress: true
                 }
             };
 
@@ -235,7 +233,7 @@
             })
             .catch(err => {
                 console.error(err);
-                alert("Erro ao gerar PDF. Tente atualizar a página.");
+                alert("Erro ao gerar PDF.");
                 btn.innerText = textoOriginal;
                 btn.disabled = false;
             });
