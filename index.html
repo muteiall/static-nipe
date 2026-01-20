@@ -77,11 +77,21 @@
 
             <div class="form-floating mb-3">
 
-                <input type="text" class="form-control" id="cpfAluno" placeholder="000.000.000-00" maxlength="14" required>
+                <input 
+                  type="text"
+                  class="form-control"
+                  id="cpfAluno"
+                  name="cpf"
+                  placeholder="000.000.000-00"
+                  maxlength="14"
+                  inputmode="numeric"
+                  required
+                >
 
                 <label for="cpfAluno">CPF do Aluno</label>
 
             </div>
+
 
 
             <button type="submit" class="btn btn-primary w-100 py-2">Gerar Documento</button>
