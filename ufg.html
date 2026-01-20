@@ -21,7 +21,7 @@
 
         /* --- BOTÃO DE DOWNLOAD --- */
         .btn-download {
-            background-color: #005c35; /* Verde UFG aproximado */
+            background-color: #005c35; /* Verde UFG */
             color: white;
             border: none;
             padding: 15px 30px;
@@ -32,6 +32,10 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             font-weight: bold;
         }
+        .btn-download:disabled {
+            background-color: #666;
+            cursor: wait;
+        }
         .btn-download:active {
             transform: scale(0.98);
         }
@@ -41,7 +45,7 @@
             background-color: white;
             width: 210mm;
             min-height: 297mm;
-            padding: 0 20mm; /* Margens padrão A4 */
+            padding: 0 20mm; 
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             box-sizing: border-box;
             position: relative;
@@ -106,13 +110,16 @@
             line-height: 1.4;
         }
         .verification-box {
+            border: 1px dashed #666;
             padding: 8px;
             margin-bottom: 15px;
             display: inline-block;
+            font-family: "Courier New", monospace;
+            background-color: #f9f9f9;
             font-size: 13px;
         }
 
-        /* Ajuste visual para celular (apenas preview) */
+        /* Ajuste visual para celular (apenas visualização na tela) */
         @media (max-width: 800px) {
             .page {
                 transform: scale(0.45);
@@ -162,7 +169,7 @@
 
         <div class="footer">
             <div class="verification-box">
-                <strong>Código de verificação:</strong> aobdea4b8
+                <strong>Código de verificação:</strong> aobdea4b81
             </div>
             <div>
                 Para verificar a autenticidade deste documento acesse<br>
@@ -173,9 +180,9 @@
     </div>
 
     <script>
-        // 1. LÓGICA DE DADOS (Nome e Data)
+        // 1. PREENCHIMENTO AUTOMÁTICO (Nome e Data)
         (function initPage() {
-            // Pega nome da URL
+            // Pega nome da URL (?nome=...)
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome'); 
 
@@ -191,28 +198,50 @@
             dateElement.innerHTML += " " + formattedDate + ".";
         })();
 
-        // 2. FUNÇÃO DE DOWNLOAD DO PDF
+        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (iOS)
         function baixarPDF() {
+            const btn = document.querySelector('.btn-download');
+            const textoOriginal = btn.innerText;
+            
+            // Feedback Visual
+            btn.innerText = "⏳ GERANDO PDF... AGUARDE";
+            btn.disabled = true;
+
             const element = document.getElementById('conteudo-para-pdf');
             
+            // Rola para o topo para garantir captura correta
+            window.scrollTo(0,0);
+
             const opt = {
                 margin:       0,
                 filename:     'declaracao-ufg.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
+                image:        { type: 'jpeg', quality: 0.95 },
                 html2canvas:  { 
-                    scale: 2, 
+                    scale: 1.2,      // ESCALA REDUZIDA PARA NÃO TRAVAR IPHONE
                     scrollY: 0, 
-                    useCORS: true 
+                    useCORS: true,
+                    logging: false
                 },
                 jsPDF:        { 
                     unit: 'mm', 
                     format: 'a4', 
                     orientation: 'portrait',
-                    compress: true // Essencial para iOS
+                    compress: true // ESSENCIAL
                 }
             };
 
-            html2pdf().set(opt).from(element).save();
+            // Gera e Salva
+            html2pdf().set(opt).from(element).save()
+            .then(() => {
+                btn.innerText = textoOriginal;
+                btn.disabled = false;
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro ao gerar PDF. Tente atualizar a página.");
+                btn.innerText = textoOriginal;
+                btn.disabled = false;
+            });
         }
     </script>
 </body>
