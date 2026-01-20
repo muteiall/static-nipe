@@ -25,38 +25,47 @@
             height: 100dvh;
 
             background-color: #0861A4;
-
         }
 
         .container {
-
             max-width: 500px;
-
         }
 
         .card {
-
             border: none;
-
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-
         }
-
     </style>
 
 </head>
 
 <body>
 
-
-
 <div class="container text-center">
 
     <div class="card p-4">
 
-        <h1 class="mb-4 fs-4">Gerador de Comprovante</h1>
+        <h1 class="mb-4 fs-4">Gerador de Comprovante de Matrícula</h1>
 
         <form id="form-gerador">
+
+            <div class="form-floating mb-4">
+
+                <select class="form-select" id="faculdade" required>
+
+                    <option value="" selected disabled>Selecione a Faculdade</option>
+
+                    <option value="ufg.html">UFG</option>
+
+                    <option value="puc.html">PUC</option>
+
+                    <option value="anhanguera.html">Anhanguera</option>
+
+                </select>
+
+                <label for="faculdade">Faculdade</label>
+
+            </div>
 
             
 
@@ -77,27 +86,6 @@
                 <label for="cpfAluno">CPF do Aluno</label>
 
             </div>
-
-
-
-            <div class="form-floating mb-4">
-
-                <select class="form-select" id="faculdade" required>
-
-                    <option value="" selected disabled>Selecione a Faculdade</option>
-
-                    <option value="ufg.html">UFG</option>
-
-                    <option value="puc.html">PUC</option>
-
-                    <option value="anhanguera.html">Anhanguera</option>
-
-                </select>
-
-                <label for="faculdade">Faculdade</label>
-
-            </div>
-
 
 
             <button type="submit" class="btn btn-primary w-100 py-2">Gerar Documento</button>
