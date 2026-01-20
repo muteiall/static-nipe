@@ -1,623 +1,355 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atestado de Matrícula - PUC-SP</title>
 
-<meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* --- ESTILOS GERAIS --- */
+        body {
+            /* MUDANÇA 1: Fonte Serifada igual ao documento original */
+            font-family: "Times New Roman", Times, serif;
+            background-color: #333;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+        }
 
-<title>Atestado de Matrícula - PUC-SP</title>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-
-
-<style>
-
-/* --- ESTILOS GERAIS --- */
-
-body {
-
-/* MUDANÇA 1: Fonte Serifada igual ao documento original */
-
-font-family: "Times New Roman", Times, serif;
-
-background-color: #333;
-
-margin: 0;
-
-padding: 20px;
-
-color: #000;
-
-display: flex;
-
-flex-direction: column;
-
-align-items: center;
-
-overflow-x: auto;
-
-}
-
-
-
-/* --- BOTÃO --- */
-
+        /* --- BOTÕES E INTERFACE --- */
         .btn-container {
-            position: fixed; top: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.95); padding: 15px;
-            text-align: center; z-index: 999;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 15px;
+            text-align: center;
+            z-index: 999;
             display: flex;
             justify-content: center;
             gap: 15px;
         }
 
         .btn-download {
-            background-color: #ff6600; color: white; border: none;
-            padding: 12px 25px; font-size: 14px; border-radius: 5px;
-            cursor: pointer; font-weight: bold;
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
             text-transform: uppercase;
         }
 
-
-.btn-download:disabled { background-color: #666; cursor: wait; }
-
-.spacer { height: 60px; width: 100%; }
+        .btn-download:disabled {
+            background-color: #666;
+            cursor: wait;
+        }
 
         .btn-back {
-            background-color: #666; color: white; border: none;
-            padding: 12px 25px; font-size: 14px; border-radius: 5px;
-            cursor: pointer; font-weight: bold;
+            background-color: #666;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
             text-decoration: none;
             text-transform: uppercase;
-            display: flex; align-items: center;
+            display: flex;
+            align-items: center;
         }
 
-
-/* --- FOLHA A4 --- */
-
-.page {
-
-background-color: white;
-
-width: 210mm;
-
-height: 296mm;
-
-/* MUDANÇA 2: Margens ajustadas para a proporção correta */
-
-padding: 20mm 25mm;
-
-margin: 0 auto;
-
-box-shadow: 0 0 20px rgba(0,0,0,0.5);
-
-box-sizing: border-box;
-
-position: relative;
-
-display: flex;
-
-flex-direction: column;
-
-}
-
-
-
-/* --- CABEÇALHO --- */
-
-.header {
-
-text-align: center;
-
-margin-bottom: 30px; /* Reduzido */
-
-display: flex;
-
-align-items: center;
-
-justify-content: center;
-
-}
-
-
-
-.header img {
-
-width: 90px; /* Logo menor e mais discreto */
-
-margin-right: 15px;
-
-}
-
-
-
-.header-text {
-
-display: flex;
-
-flex-direction: column;
-
-align-items: flex-start;
-
-text-align: left;
-
-}
-
-
-
-.header h1 {
-
-/* MUDANÇA 3: Tamanho reduzido drasticamente (de 18px para 13px) */
-
-font-size: 22px;
-
-margin: 0 0 3px 0;
-
-font-weight: bold;
-
-line-height: 1.2;
-
-color: #000;
-
-}
-
-
-
-.header p {
-
-font-size: 11px; /* Reduzido de 13px para 10px */
-
-margin: 0;
-
-color: #333;
-
-line-height: 1.1;
-
-}
-
-
-
-/* --- TÍTULO --- */
-
-.doc-title {
-
-text-align: center;
-
-font-size: 14px; /* Reduzido de 22px para 14px */
-
-font-weight: bold;
-
-margin-bottom: 30px;
-
-/* No original da PUC geralmente não tem sublinhado no título principal, mas mantive negrito */
-
-}
-
-
-
-/* --- CONTEÚDO --- */
-
-.content {
-
-font-size: 10px; /* Fonte do texto corrida (padrão documento) */
-
-line-height: 1.5;
-
-text-align: justify;
-
-margin-bottom: 15px;
-
-}
-
-
-
-.content p {
-
-margin-bottom: 11px;
-
-text-indent: 0; /* A PUC geralmente não usa indentação na primeira linha nesse modelo, ou usa pouco */
-
-}
-
-
-/* Ajuste para alinhar o "Atestamos..." com margem ou indentação */
-
-.paragraph-start {
-
-text-indent: 30px;
-
-display: block;
-
-}
-
-
-
-/* --- TABELA --- */
-
-table {
-
-width: 100%;
-
-border-collapse: collapse;
-
-font-size: 9px; /* Tabela bem pequena */
-
-margin-bottom: 20px;
-
-margin-top: 5px;
-
-}
-
-
-
-table th, table td {
-
-border: 1px solid #000;
-
-padding: 4px 6px;
-
-text-align: left;
-
-vertical-align: middle;
-
-}
-
-
-
-table th {
-
-background-color: #f0f0f0; /* Cinza bem claro */
-
-font-weight: bold;
-
-text-align: center;
-
-text-transform: capitalize;
-
-}
-
-
-
-/* --- TEXTOS LEGAIS E DATA --- */
-
-.recognition-text {
-
-font-size: 9px;
-
-text-align: justify;
-
-margin-bottom: 30px;
-
-margin-top: 10px;
-
-line-height: 1.3;
-
-}
-
-
-
-.date-place {
-
-text-align: right;
-
-font-size: 12px;
-
-margin-bottom: 20px;
-
-margin-top: 10px;
-
-}
-
-
-
-/* --- RODAPÉ --- */
-
-.footer {
-
-text-align: center;
-
-font-size: 10px;
-
-border-top: 1px solid #000;
-
-padding-top: 8px;
-
-margin-top: auto;
-
-width: 80%; /* Linha não vai até o fim da página no original */
-
-margin-left: auto;
-
-margin-right: auto;
-
-line-height: 1.3;
-
-}
-
-
-.footer a {
-
-color: #000;
-
-text-decoration: none;
-
-font-weight: bold;
-
-}
-
-</style>
-
+        .spacer {
+            height: 60px;
+            width: 100%;
+        }
+
+        /* --- FOLHA A4 --- */
+        .page {
+            background-color: white;
+            width: 210mm;
+            height: 296mm;
+            /* MUDANÇA 2: Margens ajustadas para a proporção correta */
+            padding: 20mm 25mm;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- CABEÇALHO --- */
+        .header {
+            text-align: center;
+            margin-bottom: 30px; /* Reduzido */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header img {
+            width: 90px; /* Logo menor e mais discreto */
+            margin-right: 15px;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .header h1 {
+            /* MUDANÇA 3: Tamanho reduzido drasticamente (de 18px para 13px) */
+            font-size: 22px;
+            margin: 0 0 3px 0;
+            font-weight: bold;
+            line-height: 1.2;
+            color: #000;
+        }
+
+        .header p {
+            font-size: 11px; /* Reduzido de 13px para 10px */
+            margin: 0;
+            color: #333;
+            line-height: 1.1;
+        }
+
+        /* --- TÍTULO --- */
+        .doc-title {
+            text-align: center;
+            font-size: 14px; /* Reduzido de 22px para 14px */
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        /* --- CONTEÚDO --- */
+        .content {
+            font-size: 10px; /* Fonte do texto corrida (padrão documento) */
+            line-height: 1.5;
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+
+        .content p {
+            margin-bottom: 11px;
+            text-indent: 0;
+        }
+
+        /* Ajuste para alinhar o "Atestamos..." com margem ou indentação */
+        .paragraph-start {
+            text-indent: 30px;
+            display: block;
+        }
+
+        /* --- TABELA --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px; /* Tabela bem pequena */
+            margin-bottom: 20px;
+            margin-top: 5px;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #000;
+            padding: 4px 6px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        table th {
+            background-color: #f0f0f0; /* Cinza bem claro */
+            font-weight: bold;
+            text-align: center;
+            text-transform: capitalize;
+        }
+
+        /* --- TEXTOS LEGAIS E DATA --- */
+        .recognition-text {
+            font-size: 9px;
+            text-align: justify;
+            margin-bottom: 30px;
+            margin-top: 10px;
+            line-height: 1.3;
+        }
+
+        .date-place {
+            text-align: right;
+            font-size: 12px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        /* --- RODAPÉ --- */
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            border-top: 1px solid #000;
+            padding-top: 8px;
+            margin-top: auto;
+            width: 80%; /* Linha não vai até o fim da página no original */
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.3;
+        }
+
+        .footer a {
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
 
-
-
     <div class="btn-container">
         <a href="index.html" class="btn-back">⬅ Voltar</a>
-
         <button class="btn-download" onclick="baixarPDF()">📥 BAIXAR PDF</button>
     </div>
 
-
-<div class="spacer"></div>
-
-
-
-<div class="page" id="conteudo-para-pdf">
-
-
-<div class="header">
-
-<img src="img2.png" alt="Brasão PUC-SP"> <div class="header-text">
-
-<h1>Pontifícia Universidade Católica de São Paulo</h1>
-
-<p>Recredenciada pela Portaria do MEC N°622 de 17 de maio de 2012, DOU de 18/05/2012.</p>
-
-</div>
-
-</div>
-
-
-
-<div class="doc-title">Atestado de Matrícula</div>
-
-
-
-<div class="content">
-
-<p class="paragraph-start">
-
-Atestamos, para os devidos fins, que <strong id="nome-aluno-puc">FABIO PAULO REIS DE SANTANA</strong>, matrícula <strong>RA00220323</strong>, é aluno(a) desta Universidade, tendo ingressado em <span id="entry-year"></span>.
-
-</p>
-
-<p class="paragraph-start">
-
-Atestamos, ainda, que o(a) referido(a) aluno(a) encontra-se matriculado(a) no turno <strong>INTEGRAL</strong> do curso de <strong>Doutorado em DIREITO: EFETIVIDADE DO DIREITO</strong> e que efetuou matrícula no <strong id="semester-txt"></strong> nas seguintes disciplinas:
-
-</p>
-
-</div>
-
-
-
-<table>
-
-<thead>
-
-<tr>
-
-<th style="width: 8%;">Código</th>
-
-<th style="width: 45%;">Nome da Disciplina</th>
-
-<th style="width: 15%;">Turma</th>
-
-<th style="width: 20%;">Horário</th>
-
-<th style="width: 12%;">Período</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td style="text-align: center;">P06325</td>
-
-<td>TRANSFORMAÇÕES CONTEMPORÂNEAS DA ADMINISTRAÇÃO PÚBLICA E SUAS IMPLICAÇÕES NA DOGMATICA DO DIREITO AD</td>
-
-<td style="text-align: center;">DIR02MA-NADM</td>
-
-<td style="text-align: center;">TER 07:30 às 12:30</td>
-
-<td style="text-align: center;" id="class-period"></td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-
-
-<div class="recognition-text">
-
-Reconhecido pela Portaria MEC 656/17-DOU_23/05/2017- nº 97/ seção nº 1/ pag. 14. Republicada no DOU em 27/07/2017
-
-</div>
-
-
-
-<div class="date-place" id="current-date-place">
-
-</div>
-
-
-
-<div class="footer">
-
-Rua Monte Alegre, 984 - São Paulo-SP - CEP:05014-901 - Fone (11) 3670-8000<br>
-
-<a href="http://www.pucsp.br">http://www.pucsp.br</a>
-
-</div>
-
-
-
-</div>
-
-
-
-<script>
-
-// 1. LÓGICA DE DADOS
-
-(function initPage() {
-
-const urlParams = new URLSearchParams(window.location.search);
-
-const nomeNaUrl = urlParams.get('nome');
-
-if (nomeNaUrl) {
-
-document.getElementById("nome-aluno-puc").innerText = nomeNaUrl.toUpperCase();
-
-}
-
-
-
-const now = new Date();
-
-const year = now.getFullYear();
-
-const month = now.getMonth();
-
-
-const options = { day: 'numeric', month: 'long', year: 'numeric' };
-
-const fullDate = now.toLocaleDateString('pt-BR', options);
-
-document.getElementById('current-date-place').innerHTML = `São Paulo, ${fullDate}`;
-
-
-
-const entryYearCalc = year - 2;
-
-document.getElementById('entry-year').innerText = entryYearCalc;
-
-
-
-let semesterText = (month < 6) ? `1º semestre do ano de ${year}` : `2º semestre do ano de ${year}`;
-
-let classStart = (month < 6) ? `12/02/${year}` : `05/08/${year}`;
-
-let classEnd = (month < 6) ? `28/06/${year}` : `15/12/${year}`;
-
-
-
-document.getElementById('semester-txt').innerText = semesterText;
-
-document.getElementById('class-period').innerHTML = `${classStart}<br>a<br>${classEnd}`;
-
-})();
-
-
-
-// 2. DOWNLOAD PDF (CONFIGURADO PARA NÃO AUMENTAR FONTE)
-
-function baixarPDF() {
-
-const btn = document.querySelector('.btn-download');
-
-const textoOriginal = btn.innerText;
-
-btn.innerText = "⏳ PROCESSANDO...";
-
-btn.disabled = true;
-
-
-
-const element = document.getElementById('conteudo-para-pdf');
-
-window.scrollTo(0,0);
-
-
-
-const opt = {
-
-margin: 0,
-
-filename: 'atestado-matricula-puc.pdf',
-
-image: { type: 'jpeg', quality: 0.98 },
-
-html2canvas: {
-
-scale: 2,
-
-scrollY: 0,
-
-useCORS: true,
-
-windowWidth: 794 // Largura exata A4 em pixels (96dpi) para evitar zoom
-
-},
-
-jsPDF: {
-
-unit: 'mm',
-
-format: 'a4',
-
-orientation: 'portrait',
-
-compress: true
-
-}
-
-};
-
-
-
-html2pdf().set(opt).from(element).save()
-
-.then(() => {
-
-btn.innerText = textoOriginal;
-
-btn.disabled = false;
-
-})
-
-.catch(err => {
-
-console.error(err);
-
-alert("Erro ao gerar PDF.");
-
-btn.innerText = textoOriginal;
-
-btn.disabled = false;
-
-});
-
-}
-
-</script>
-
+    <div class="spacer"></div>
+
+    <div class="page" id="conteudo-para-pdf">
+
+        <div class="header">
+            <img src="img2.png" alt="Brasão PUC-SP">
+            <div class="header-text">
+                <h1>Pontifícia Universidade Católica de São Paulo</h1>
+                <p>Recredenciada pela Portaria do MEC N°622 de 17 de maio de 2012, DOU de 18/05/2012.</p>
+            </div>
+        </div>
+
+        <div class="doc-title">Atestado de Matrícula</div>
+
+        <div class="content">
+            <p class="paragraph-start">
+                Atestamos, para os devidos fins, que <strong id="nome-aluno-puc">FABIO PAULO REIS DE SANTANA</strong>, matrícula <strong>RA00220323</strong>, é aluno(a) desta Universidade, tendo ingressado em <span id="entry-year"></span>.
+            </p>
+            <p class="paragraph-start">
+                Atestamos, ainda, que o(a) referido(a) aluno(a) encontra-se matriculado(a) no turno <strong>INTEGRAL</strong> do curso de <strong>Doutorado em DIREITO: EFETIVIDADE DO DIREITO</strong> e que efetuou matrícula no <strong id="semester-txt"></strong> nas seguintes disciplinas:
+            </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 8%;">Código</th>
+                    <th style="width: 45%;">Nome da Disciplina</th>
+                    <th style="width: 15%;">Turma</th>
+                    <th style="width: 20%;">Horário</th>
+                    <th style="width: 12%;">Período</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center;">P06325</td>
+                    <td>TRANSFORMAÇÕES CONTEMPORÂNEAS DA ADMINISTRAÇÃO PÚBLICA E SUAS IMPLICAÇÕES NA DOGMATICA DO DIREITO AD</td>
+                    <td style="text-align: center;">DIR02MA-NADM</td>
+                    <td style="text-align: center;">TER 07:30 às 12:30</td>
+                    <td style="text-align: center;" id="class-period"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="recognition-text">
+            Reconhecido pela Portaria MEC 656/17-DOU_23/05/2017- nº 97/ seção nº 1/ pag. 14. Republicada no DOU em 27/07/2017
+        </div>
+
+        <div class="date-place" id="current-date-place"></div>
+
+        <div class="footer">
+            Rua Monte Alegre, 984 - São Paulo-SP - CEP:05014-901 - Fone (11) 3670-8000<br>
+            <a href="http://www.pucsp.br">http://www.pucsp.br</a>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. LÓGICA DE DADOS
+        (function initPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeNaUrl = urlParams.get('nome');
+
+            if (nomeNaUrl) {
+                document.getElementById("nome-aluno-puc").innerText = nomeNaUrl.toUpperCase();
+            }
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const fullDate = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('current-date-place').innerHTML = `São Paulo, ${fullDate}`;
+
+            const entryYearCalc = year - 2;
+            document.getElementById('entry-year').innerText = entryYearCalc;
+
+            let semesterText = (month < 6) ? `1º semestre do ano de ${year}` : `2º semestre do ano de ${year}`;
+            let classStart = (month < 6) ? `12/02/${year}` : `05/08/${year}`;
+            let classEnd = (month < 6) ? `28/06/${year}` : `15/12/${year}`;
+
+            document.getElementById('semester-txt').innerText = semesterText;
+            document.getElementById('class-period').innerHTML = `${classStart}<br>a<br>${classEnd}`;
+        })();
+
+        // 2. DOWNLOAD PDF (CONFIGURADO PARA NÃO AUMENTAR FONTE)
+        function baixarPDF() {
+            const btn = document.querySelector('.btn-download');
+            const textoOriginal = btn.innerText;
+
+            btn.innerText = "⏳ PROCESSANDO...";
+            btn.disabled = true;
+
+            const element = document.getElementById('conteudo-para-pdf');
+            window.scrollTo(0, 0);
+
+            const opt = {
+                margin: 0,
+                filename: 'atestado-matricula-puc.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    scrollY: 0,
+                    useCORS: true,
+                    windowWidth: 794 // Largura exata A4 em pixels (96dpi) para evitar zoom
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait',
+                    compress: true
+                }
+            };
+
+            html2pdf().set(opt).from(element).save()
+                .then(() => {
+                    btn.innerText = textoOriginal;
+                    btn.disabled = false;
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Erro ao gerar PDF.");
+                    btn.innerText = textoOriginal;
+                    btn.disabled = false;
+                });
+        }
+    </script>
 </body>
 
 </html>
-
-
-
