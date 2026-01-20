@@ -1,183 +1,114 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Gerador de Atestado de Matrícula</title>
 
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NJQ2TKJ2');</script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-
         body {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100dvh;
-            background-color: #f8f9fa; /* Cor de fallback caso a imagem não carregue */
+            background-color: #f8f9fa;
             background-image: url('https://s1.static.brasilescola.uol.com.br/be/vestibular/8a6675c5eea4340582caedc71af7f110.jpg');
         }
-
-        .container {
-            max-width: 500px;
-        }
-
-        .card {
-            border: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+        .container { max-width: 500px; }
+        .card { border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
     </style>
-
 </head>
 
 <body>
-
-<div class="container text-center">
-
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NJQ2TKJ2"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <div class="container text-center">
     <div class="card p-4">
-
         <h1 class="mb-4 fs-4">Gerador de Comprovante de Matrícula</h1>
-
         <form id="form-gerador">
-
             <div class="form-floating mb-4">
-
                 <select class="form-select" id="faculdade" required>
-
                     <option value="" selected disabled>Selecione a Faculdade</option>
-
                     <option value="ufg.html">UFG</option>
-
                     <option value="puc.html">PUC</option>
-
                     <option value="anhanguera.html">Anhanguera</option>
-
                 </select>
-
                 <label for="faculdade">Faculdade</label>
-
             </div>
-
             
-
             <div class="form-floating mb-3">
-
                 <input type="text" class="form-control" id="nomeCompleto" placeholder="Nome Completo do Aluno" required>
-
                 <label for="nomeCompleto">Nome Completo</label>
-
             </div>
 
-
-
             <div class="form-floating mb-3">
-
                 <input 
-                  type="text"
-                  class="form-control"
-                  id="cpfAluno"
-                  name="cpf"
-                  placeholder="000.000.000-00"
-                  maxlength="14"
-                  inputmode="numeric"
+                  type="text" 
+                  class="form-control" 
+                  id="cpfAluno" 
+                  name="cpf" 
+                  placeholder="000.000.000-00" 
+                  maxlength="14" 
+                  inputmode="numeric" 
                   required
                 >
-
                 <label for="cpfAluno">CPF</label>
-
             </div>
 
-
-
             <button type="submit" class="btn btn-primary w-100 py-2">Gerar Documento</button>
-
         </form>
-
     </div>
-
 </div>
 
-
-
 <script>
-
-    // 1. MÁSCARA DE CPF (Formata enquanto digita)
-
+    // 1. MÁSCARA DE CPF
     const inputCPF = document.getElementById('cpfAluno');
-
-
-
     inputCPF.addEventListener('input', function(e) {
-
         let value = e.target.value;
-
-        
-
-        // Remove tudo que não é dígito
-
         value = value.replace(/\D/g, "");
-
-        
-
-        // Aplica a formatação
-
         value = value.replace(/(\d{3})(\d)/, "$1.$2");
-
         value = value.replace(/(\d{3})(\d)/, "$1.$2");
-
         value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-
-        
-
         e.target.value = value;
-
     });
 
-
-
-    // 2. ENVIO DO FORMULÁRIO
-
+    // 2. ENVIO DO FORMULÁRIO COM RASTREAMENTO
     document.getElementById('form-gerador').addEventListener('submit', function(event) {
-
-        event.preventDefault(); // Evita o envio padrão
-
-
+        event.preventDefault(); 
 
         const nome = document.getElementById('nomeCompleto').value;
-
         const cpf = document.getElementById('cpfAluno').value;
-
         const arquivo = document.getElementById('faculdade').value;
 
-
-
         if (nome && cpf && arquivo) {
-
-            // Codifica para URL segura
+            
+            // --- CÓDIGO NOVO: Avisa o GTM ---
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'gerar_documento_sucesso',
+                'faculdade': arquivo // Envia qual faculdade foi escolhida
+            });
+            // --------------------------------
 
             const nomeCodificado = encodeURIComponent(nome);
-
             const cpfCodificado = encodeURIComponent(cpf);
 
-
-
-            // Redireciona passando NOME e CPF
-
-            window.location.href = `${arquivo}?nome=${nomeCodificado}&cpf=${cpfCodificado}`;
+            // Pequeno delay de 300ms para garantir que o evento foi enviado
+            setTimeout(() => {
+                window.location.href = `${arquivo}?nome=${nomeCodificado}&cpf=${cpfCodificado}`;
+            }, 300);
 
         } else {
-
             alert('Por favor, preencha todos os campos.');
-
         }
-
     });
-
 </script>
 
 </body>
