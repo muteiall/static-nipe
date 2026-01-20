@@ -23,6 +23,9 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             box-sizing: border-box;
             position: relative;
+            /* MUDANÇA 1: Usar Flexbox para layout vertical */
+            display: flex;
+            flex-direction: column;
         }
 
         /* --- CABEÇALHO --- */
@@ -106,7 +109,7 @@
             text-align: center;
         }
 
-        /* --- RODAPÉ E RECONHECIMENTO --- */
+        /* --- RECONHECIMENTO (TEXTO LEGAL) --- */
         .recognition-text {
             font-size: 10px;
             text-align: justify;
@@ -117,18 +120,22 @@
         .date-place {
             text-align: right;
             font-size: 14px;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
 
+        /* --- RODAPÉ --- */
         .footer {
             text-align: center;
             font-size: 11px;
             border-top: 1px solid #000;
             padding-top: 10px;
-            position: absolute;
-            bottom: 20mm;
-            left: 20mm;
-            right: 20mm;
+            /* MUDANÇA 2: Remove absolute e usa margin-top: auto */
+            margin-top: auto; 
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
+            width: 100%;
         }
 
         /* --- CORREÇÃO PARA IPHONE E IMPRESSÃO --- */
@@ -149,17 +156,24 @@
 
             .page {
                 width: 100% !important;
-                height: auto !important;
+                height: 297mm !important; /* Força altura total na impressão */
                 margin: 0 !important;
                 padding: 15mm 15mm !important; 
                 box-shadow: none !important;
                 border: none !important;
-                display: block !important; 
+                display: flex !important;
+                flex-direction: column !important;
             }
 
             .header { margin-bottom: 30px !important; }
             .doc-title { margin-bottom: 30px !important; }
-            .footer { position: fixed; bottom: 10mm; }
+            
+            /* Garante que o rodapé fique no fim na impressão também */
+            .footer {
+                margin-top: auto !important;
+                position: relative !important;
+                bottom: 0 !important;
+            }
         }
     </style>
 </head>
@@ -213,7 +227,7 @@
         </div>
 
         <div class="date-place" id="current-date-place">
-            </div>
+        </div>
 
         <div class="footer">
             Rua Monte Alegre, 984 - São Paulo-SP - CEP:05014-901 - Fone (11) 3670-8000<br>
@@ -223,7 +237,7 @@
     </div>
 
     <script>
-        // SCRIPT PRINCIPAL QUE RODA AO ABRIR A PÁGINA
+        // SCRIPT PRINCIPAL
         (function initPage() {
             
             // 1. CAPTURAR NOME DA URL
@@ -231,11 +245,10 @@
             const nomeNaUrl = urlParams.get('nome'); 
 
             if (nomeNaUrl) {
-                // Se veio nome na URL, substitui o padrão (mantendo maiúsculo)
                 document.getElementById("nome-aluno-puc").innerText = nomeNaUrl.toUpperCase();
             }
 
-            // 2. DATAS E SEMESTRES (Lógica original mantida)
+            // 2. DATAS E SEMESTRES
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth(); 
