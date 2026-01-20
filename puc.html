@@ -238,7 +238,11 @@
 
         <div class="content">
             <p class="paragraph-start">
-                Atestamos, para os devidos fins, que <strong id="nome-aluno-puc">FABIO PAULO REIS DE SANTANA</strong>, matrícula <strong>RA00220323</strong>, é aluno(a) desta Universidade, tendo ingressado em <span id="entry-year"></span>.
+                Atestamos, para os devidos fins, que <strong id="nome-aluno-puc">FABIO PAULO REIS DE SANTANA</strong>,
+                
+                inscrito(a) no CPF sob o nº <strong id="cpf-aluno">000.000.000-00</strong>,
+                
+                matrícula <strong>RA00220323</strong>, é aluno(a) desta Universidade, tendo ingressado em <span id="entry-year"></span>.
             </p>
             <p class="paragraph-start">
                 Atestamos, ainda, que o(a) referido(a) aluno(a) encontra-se matriculado(a) no turno <strong>INTEGRAL</strong> do curso de <strong>Doutorado em DIREITO: EFETIVIDADE DO DIREITO</strong> e que efetuou matrícula no <strong id="semester-txt"></strong> nas seguintes disciplinas:
@@ -283,12 +287,20 @@
         // 1. LÓGICA DE DADOS
         (function initPage() {
             const urlParams = new URLSearchParams(window.location.search);
+            
+            // NOME
             const nomeNaUrl = urlParams.get('nome');
-
             if (nomeNaUrl) {
                 document.getElementById("nome-aluno-puc").innerText = nomeNaUrl.toUpperCase();
             }
 
+            // CPF (NOVO)
+            const cpfNaUrl = urlParams.get('cpf');
+            if (cpfNaUrl) {
+                document.getElementById("cpf-aluno").innerText = cpfNaUrl;
+            }
+
+            // DATAS E PERÍODOS
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth();
@@ -308,7 +320,7 @@
             document.getElementById('class-period').innerHTML = `${classStart}<br>a<br>${classEnd}`;
         })();
 
-        // 2. DOWNLOAD PDF (CONFIGURADO PARA NÃO AUMENTAR FONTE)
+        // 2. DOWNLOAD PDF
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
