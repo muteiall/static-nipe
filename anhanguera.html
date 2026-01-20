@@ -4,26 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaração Anhanguera</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        /* --- RESET E CONFIGURAÇÕES BÁSICAS --- */
+        /* --- ESTILOS GERAIS --- */
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f0f0f0;
             font-family: Arial, Helvetica, sans-serif;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- BOTÃO DE DOWNLOAD --- */
+        .btn-download {
+            background-color: #ff6600; /* Laranja Anhanguera */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        .btn-download:active {
+            transform: scale(0.98);
         }
 
         /* --- FOLHA A4 --- */
         .page {
             position: relative;
             width: 210mm;
-            height: 297mm;
+            min-height: 297mm;
             background-color: white;
-            margin: 0 auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            overflow: hidden; /* Essencial para iOS */
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            overflow: hidden; 
         }
 
         /* --- CAMADA 1: IMAGEM DE FUNDO --- */
@@ -46,7 +66,6 @@
         .text-layer {
             position: relative;
             z-index: 1;
-            /* Ajuste o Padding-Top conforme sua imagem de fundo */
             padding-top: 80mm; 
             padding-left: 25mm;
             padding-right: 25mm;
@@ -76,7 +95,7 @@
         }
 
         .data-local {
-            text-align: end; 
+            text-align: right; 
             font-size: 16px;
             margin-bottom: 190px;
         }
@@ -87,31 +106,23 @@
             font-weight: bold;
         }
 
-        /* --- IMPRESSÃO --- */
-        @media print {
-            @page {
-                size: A4;
-                margin: 0;
-            }
-            body, html {
-                width: 210mm;
-                height: 297mm;
-                background-color: white;
-            }
+        /* Ajuste apenas para visualização em telas pequenas */
+        @media (max-width: 800px) {
             .page {
-                margin: 0 !important;
-                border: none !important;
-                box-shadow: none !important;
-                display: block !important;
-                width: 100% !important;
-                height: 100% !important;
+                transform: scale(0.45);
+                transform-origin: top center;
+                margin-bottom: -150mm; 
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="page" onclick="window.print()">
+    <button class="btn-download" onclick="baixarPDF()">
+        📥 BAIXAR DECLARAÇÃO (PDF)
+    </button>
+
+    <div class="page" id="conteudo-para-pdf">
         
         <div class="background-layer">
             <img src="fundo.jpg" alt="Fundo">
@@ -140,18 +151,18 @@
     </div>
 
     <script>
+        // 1. PREENCHIMENTO AUTOMÁTICO (NOME E DATAS)
         (function autoUpdate() {
             
-            // --- 1. LÓGICA DE CAPTURA DE NOME (URL) ---
+            // Captura de Nome da URL
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome');
 
             if (nomeNaUrl) {
-                // Substitui o nome padrão pelo digitado no menu
                 document.getElementById("nome-aluno-anhanguera").innerText = nomeNaUrl.toUpperCase();
             }
 
-            // --- 2. LÓGICA DE DATAS E SEMESTRES ---
+            // Datas e Semestres
             const now = new Date();
             const day = now.getDate();
             const year = now.getFullYear();
@@ -162,21 +173,37 @@
                 "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
             ];
 
-            // Semestre
-            let semesterText = "";
-            if (monthIndex < 6) {
-                semesterText = "1º semestre";
-            } else {
-                semesterText = "2º semestre";
-            }
-            
-            // Data com SÃO PAULO
+            let semesterText = (monthIndex < 6) ? "1º semestre" : "2º semestre";
             const fullDateText = `São Paulo, ${day} de ${months[monthIndex]} de ${year}.`;
 
             document.getElementById("dynamic-semester").innerText = semesterText;
             document.getElementById("dynamic-date").innerText = fullDateText;
 
         })();
+
+        // 2. FUNÇÃO DE DOWNLOAD DO PDF
+        function baixarPDF() {
+            const elemento = document.getElementById('conteudo-para-pdf');
+            
+            const options = {
+                margin:       0,
+                filename:     'declaracao-anhanguera.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2,       // Alta resolução
+                    useCORS: true,  // Permite carregar a imagem de fundo corretamente
+                    scrollY: 0 
+                },
+                jsPDF:        { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait',
+                    compress: true // Otimização para iOS
+                }
+            };
+
+            html2pdf().set(options).from(elemento).save();
+        }
     </script>
 </body>
 </html>
