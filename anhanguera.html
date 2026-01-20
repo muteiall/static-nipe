@@ -55,18 +55,23 @@
         }
 
         .btn-download {
-
-            background-color: #ff6600; /* Laranja Anhanguera */
-
-            color: white; border: none;
-
-            padding: 12px 30px; font-size: 16px; border-radius: 5px;
-
+            background-color: #ff6600; color: white; border: none;
+            padding: 12px 25px; font-size: 14px; border-radius: 5px;
             cursor: pointer; font-weight: bold;
-
+            text-transform: uppercase;
         }
 
         .btn-download:disabled { background-color: #555; cursor: wait; }
+
+        /* Botão Voltar (Cinza) */
+        .btn-back {
+            background-color: #666; color: white; border: none;
+            padding: 12px 25px; font-size: 14px; border-radius: 5px;
+            cursor: pointer; font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            display: flex; align-items: center;
+        }
 
         .spacer { height: 80px; width: 100%; }
 
@@ -203,6 +208,7 @@
 
 
     <div class="btn-container">
+        <a href="index.html" class="btn-back">⬅ Voltar</a>
 
         <button class="btn-download" onclick="baixarPDF()">
 
@@ -411,3 +417,4 @@
 </body>
 
 </html>
+
