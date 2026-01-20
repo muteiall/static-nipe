@@ -1,148 +1,193 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Gerador de Atestado de Matrícula</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
+
         body {
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            
-            background: linear-gradient(-45deg, #1a2a6c, #b21f1f, #fdbb2d, #1a2a6c);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-        }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+            min-height: 100dvh;
 
-        .card {
-            background: rgba(255, 255, 255, 0.9); /* Branco semi-transparente */
-            backdrop-filter: blur(10px); /* Desfoque atrás */
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
+            background-color: #f8f9fa;
 
-        .card:hover {
-            transform: translateY(-5px);
         }
 
         .container {
-            max-width: 450px;
-            padding: 20px;
+
+            max-width: 500px;
+
         }
 
-        h1 {
-            color: #333;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
+        .card {
 
-        .form-floating label {
-            color: #666;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: #b21f1f;
-            box-shadow: 0 0 0 0.25rem rgba(178, 31, 31, 0.25);
-        }
-
-        .btn-custom {
-            background: linear-gradient(45deg, #1a2a6c, #b21f1f);
             border: none;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
         }
+
     </style>
+
 </head>
+
 <body>
 
+
+
 <div class="container text-center">
-    <div class="card p-4 p-md-5">
-        <div class="mb-4">
-            <i class="bi bi-mortarboard-fill fs-1 text-primary" style="background: -webkit-linear-gradient(#b21f1f, #1a2a6c); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
-        </div>
-        <h1 class="mb-2 fs-3">Gerador de Documentos</h1>
-        <p class="text-muted mb-4 small">Preencha os dados para gerar o PDF oficial.</p>
-        
+
+    <div class="card p-4">
+
+        <h1 class="mb-4 fs-4">Gerador de Comprovante</h1>
+
         <form id="form-gerador">
+
             
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="nomeCompleto" placeholder="Nome Completo do Aluno" required>
-                <label for="nomeCompleto"><i class="bi bi-person me-2"></i>Nome Completo</label>
-            </div>
 
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="cpfAluno" placeholder="000.000.000-00" maxlength="14" required>
-                <label for="cpfAluno"><i class="bi bi-card-heading me-2"></i>CPF</label>
+
+                <input type="text" class="form-control" id="nomeCompleto" placeholder="Nome Completo do Aluno" required>
+
+                <label for="nomeCompleto">Nome Completo do Aluno</label>
+
             </div>
+
+
+
+            <div class="form-floating mb-3">
+
+                <input type="text" class="form-control" id="cpfAluno" placeholder="000.000.000-00" maxlength="14" required>
+
+                <label for="cpfAluno">CPF do Aluno</label>
+
+            </div>
+
+
 
             <div class="form-floating mb-4">
+
                 <select class="form-select" id="faculdade" required>
-                    <option value="" selected disabled>Selecione a Instituição</option>
+
+                    <option value="" selected disabled>Selecione a Faculdade</option>
+
                     <option value="ufg.html">UFG</option>
+
                     <option value="puc.html">PUC</option>
+
                     <option value="anhanguera.html">Anhanguera</option>
+
                 </select>
-                <label for="faculdade"><i class="bi bi-building me-2"></i>Instituição</label>
+
+                <label for="faculdade">Faculdade</label>
+
             </div>
 
-            <button type="submit" class="btn btn-custom w-100 py-3 rounded-3">
-                <i class="bi bi-file-earmark-pdf me-2"></i>Gerar Documento
-            </button>
+
+
+            <button type="submit" class="btn btn-primary w-100 py-2">Gerar Documento</button>
+
         </form>
+
     </div>
-    
-    <div class="mt-4 text-white-50 small">
-        Sistema Seguro &copy; 2024
-    </div>
+
 </div>
 
+
+
 <script>
-    // 1. MÁSCARA DE CPF
+
+    // 1. MÁSCARA DE CPF (Formata enquanto digita)
+
     const inputCPF = document.getElementById('cpfAluno');
+
+
+
     inputCPF.addEventListener('input', function(e) {
+
         let value = e.target.value;
+
+        
+
+        // Remove tudo que não é dígito
+
         value = value.replace(/\D/g, "");
+
+        
+
+        // Aplica a formatação
+
         value = value.replace(/(\d{3})(\d)/, "$1.$2");
+
         value = value.replace(/(\d{3})(\d)/, "$1.$2");
+
         value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+        
+
         e.target.value = value;
+
     });
+
+
+
+    // 2. ENVIO DO FORMULÁRIO
 
     document.getElementById('form-gerador').addEventListener('submit', function(event) {
-        event.preventDefault();
+
+        event.preventDefault(); // Evita o envio padrão
+
+
 
         const nome = document.getElementById('nomeCompleto').value;
+
         const cpf = document.getElementById('cpfAluno').value;
+
         const arquivo = document.getElementById('faculdade').value;
 
+
+
         if (nome && cpf && arquivo) {
+
+            // Codifica para URL segura
+
             const nomeCodificado = encodeURIComponent(nome);
+
             const cpfCodificado = encodeURIComponent(cpf);
-            // Redireciona
+
+
+
+            // Redireciona passando NOME e CPF
+
             window.location.href = `${arquivo}?nome=${nomeCodificado}&cpf=${cpfCodificado}`;
+
         } else {
+
             alert('Por favor, preencha todos os campos.');
+
         }
+
     });
+
 </script>
 
+
+
 </body>
+
 </html>
