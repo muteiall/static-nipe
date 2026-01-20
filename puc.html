@@ -4,26 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atestado de Matrícula - PUC-SP</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         /* --- ESTILOS GERAIS --- */
         body {
             font-family: Arial, Helvetica, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
+        /* --- BOTÃO DE DOWNLOAD --- */
+        .btn-download {
+            background-color: #003366; /* Azul PUC */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        .btn-download:active {
+            transform: scale(0.98);
+        }
+
+        /* --- FOLHA A4 --- */
         .page {
             background-color: white;
             width: 210mm;
             min-height: 297mm;
             padding: 20mm;
             margin: 0 auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
             box-sizing: border-box;
             position: relative;
-            /* MUDANÇA 1: Usar Flexbox para layout vertical */
+            
+            /* SOLUÇÃO FLEXBOX PARA O RODAPÉ (Funciona no iPhone) */
             display: flex;
             flex-direction: column;
         }
@@ -109,7 +134,7 @@
             text-align: center;
         }
 
-        /* --- RECONHECIMENTO (TEXTO LEGAL) --- */
+        /* --- RODAPÉ E RECONHECIMENTO --- */
         .recognition-text {
             font-size: 10px;
             text-align: justify;
@@ -123,68 +148,38 @@
             margin-bottom: 40px;
         }
 
-        /* --- RODAPÉ --- */
+        /* --- RODAPÉ FLEXÍVEL (Correção iOS) --- */
         .footer {
             text-align: center;
             font-size: 11px;
             border-top: 1px solid #000;
             padding-top: 10px;
-            /* MUDANÇA 2: Remove absolute e usa margin-top: auto */
+            
+            /* Empurra o rodapé para o final do espaço disponível */
             margin-top: auto; 
-            position: relative;
-            bottom: auto;
-            left: auto;
-            right: auto;
             width: 100%;
         }
 
-        /* --- CORREÇÃO PARA IPHONE E IMPRESSÃO --- */
-        @media print {
-            @page {
-                size: A4 portrait;
-                margin: 0;
-            }
-
-            body, html {
-                width: 210mm;
-                height: 297mm;
-                margin: 0;
-                padding: 0;
-                background-color: white;
-                overflow: hidden; 
-            }
-
+        /* Ajuste visual para telas pequenas (apenas preview) */
+        @media (max-width: 800px) {
             .page {
-                width: 100% !important;
-                height: 297mm !important; /* Força altura total na impressão */
-                margin: 0 !important;
-                padding: 15mm 15mm !important; 
-                box-shadow: none !important;
-                border: none !important;
-                display: flex !important;
-                flex-direction: column !important;
-            }
-
-            .header { margin-bottom: 30px !important; }
-            .doc-title { margin-bottom: 30px !important; }
-            
-            /* Garante que o rodapé fique no fim na impressão também */
-            .footer {
-                margin-top: auto !important;
-                position: relative !important;
-                bottom: 0 !important;
+                transform: scale(0.45);
+                transform-origin: top center;
+                margin-bottom: -150mm;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="page" onclick="window.print()">
+    <button class="btn-download" onclick="baixarPDF()">
+        📥 BAIXAR ATESTADO (PDF)
+    </button>
+
+    <div class="page" id="conteudo-para-pdf">
         
         <div class="header">
-            <img src="img2.png" alt="Brasão PUC-SP">
-
-            <div class="header-text">
+            <img src="img2.png" alt="Brasão PUC-SP"> <div class="header-text">
                 <h1>Pontifícia Universidade Católica de São Paulo</h1>
                 <p>Recredenciada pela Portaria do MEC N°622 de 17 de maio de 2012, DOU de 18/05/2012.</p>
             </div>
@@ -227,7 +222,7 @@
         </div>
 
         <div class="date-place" id="current-date-place">
-        </div>
+            </div>
 
         <div class="footer">
             Rua Monte Alegre, 984 - São Paulo-SP - CEP:05014-901 - Fone (11) 3670-8000<br>
@@ -237,28 +232,27 @@
     </div>
 
     <script>
-        // SCRIPT PRINCIPAL
+        // 1. LÓGICA DE DADOS (Nome, Data, Semestre)
         (function initPage() {
             
-            // 1. CAPTURAR NOME DA URL
+            // Captura Nome da URL
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome'); 
-
             if (nomeNaUrl) {
                 document.getElementById("nome-aluno-puc").innerText = nomeNaUrl.toUpperCase();
             }
 
-            // 2. DATAS E SEMESTRES
+            // Datas e Semestres
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth(); 
             
-            // Data de hoje
+            // Data atual
             const options = { day: 'numeric', month: 'long', year: 'numeric' };
             const fullDate = now.toLocaleDateString('pt-BR', options);
             document.getElementById('current-date-place').innerHTML = `São Paulo, ${fullDate}`;
 
-            // Ano de Ingresso (Atual - 2)
+            // Ano de Ingresso (Ano atual - 2)
             const entryYearCalc = year - 2;
             document.getElementById('entry-year').innerText = entryYearCalc;
 
@@ -279,8 +273,31 @@
 
             document.getElementById('semester-txt').innerText = semesterText;
             document.getElementById('class-period').innerHTML = `${classStart}<br>a<br>${classEnd}`;
-
         })();
+
+        // 2. FUNÇÃO DE DOWNLOAD DO PDF
+        function baixarPDF() {
+            const element = document.getElementById('conteudo-para-pdf');
+            
+            const opt = {
+                margin:       0,
+                filename:     'atestado-matricula-puc.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    scrollY: 0, 
+                    useCORS: true 
+                },
+                jsPDF:        { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait',
+                    compress: true // Otimização para iOS
+                }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
     </script>
 </body>
 </html>
