@@ -10,40 +10,43 @@
     <style>
         /* --- ESTILOS GERAIS --- */
         body {
-            /* Fonte Padrão UFG: Arial/Helvetica (Sem serifa) */
             font-family: Helvetica, Arial, sans-serif;
-            background-color: #333;
             margin: 0;
             padding: 20px;
+            background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: auto; /* Permite rolagem no celular */
         }
 
         /* --- BOTÃO DE DOWNLOAD --- */
-        .btn-container {
-            position: fixed; top: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.8); padding: 10px;
-            text-align: center; z-index: 999;
-        }
         .btn-download {
             background-color: #005c35; /* Verde UFG */
-            color: white; border: none;
-            padding: 10px 20px; font-size: 14px; border-radius: 4px;
-            cursor: pointer; font-weight: bold;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: bold;
         }
-        .btn-download:disabled { background-color: #666; cursor: wait; }
-        .spacer { height: 60px; width: 100%; }
+        .btn-download:disabled {
+            background-color: #666;
+            cursor: wait;
+        }
+        .btn-download:active {
+            transform: scale(0.98);
+        }
 
         /* --- FOLHA A4 --- */
         .page {
             background-color: white;
             width: 210mm;
             min-height: 297mm;
-            /* Margens padrão A4 ajustadas */
-            padding: 20mm 25mm; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            padding: 0 20mm; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
             box-sizing: border-box;
             position: relative;
             display: flex;
@@ -51,91 +54,83 @@
             margin: 0 auto;
         }
 
-        /* --- CABEÇALHO --- */
+        /* --- ELEMENTOS DO DOCUMENTO --- */
         .header {
-            text-align: center;
-            margin-bottom: 40px;
+            text-align: start;
+            margin-bottom: 100px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            margin-top: -10px;
         }
         .header img {
-            width: 80px; /* Logo menor e proporcional */
-            margin-right: 15px;
+            width: 130px;
+            margin-bottom: 15px;
         }
         .header-text {
             font-weight: 700;
-            font-size: 13px; /* Reduzido */
+            font-size: 23px;
             line-height: 1.3;
             text-transform: uppercase;
+            margin-left: 20px;
             text-align: left;
-            color: #333;
         }
-
-        /* --- TÍTULO --- */
         .title {
             text-align: center;
             font-weight: bold;
-            font-size: 14px; /* Reduzido */
-            margin-bottom: 40px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-size: 17px;
+            margin-bottom: 130px;
+            letter-spacing: 10px;
         }
-
-        /* --- CONTEÚDO --- */
         .content {
             text-align: justify;
-            line-height: 1.5;
-            font-size: 12px; /* Tamanho ideal de leitura A4 */
-            margin-bottom: 30px;
-            color: #000;
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 5px;
         }
-
-        /* --- OPÇÕES DE STATUS --- */
         .status-options {
             margin-left: 0;
-            font-size: 12px;
+            font-size: 14px;
             line-height: 1.8;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 5px;
         }
-        
-        /* --- DATA --- */
         .date {
             text-align: center;
-            font-size: 12px;
-            margin-top: auto; /* Empurra para baixo */
-            margin-bottom: 40px;
+            font-size: 15px;
+            margin-bottom: 135px;
         }
-
-        /* --- RODAPÉ --- */
         .footer {
             border-top: 1px solid #999;
-            padding-top: 10px;
-            font-size: 9px; /* Fonte pequena de rodapé */
+            padding-top: 20px;
+            margin-top: 40px;
+            font-size: 11px;
             text-align: center;
             color: #333;
-            line-height: 1.3;
+            line-height: 1.4;
+        }
+        .verification-box {
+            padding: 8px;
+            margin-bottom: 15px;
+            display: inline-block;
+            font-size: 13px;
         }
 
-        .verification-box {
-            border: 1px dashed #666;
-            padding: 5px 10px;
-            margin-bottom: 10px;
-            display: inline-block;
-            font-family: "Courier New", monospace;
-            background-color: #f9f9f9;
-            font-size: 11px;
+        /* Ajuste visual para celular (apenas visualização) */
+        @media (max-width: 800px) {
+            .page {
+                transform: scale(0.45);
+                transform-origin: top center;
+                margin-bottom: -150mm;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="btn-container">
-        <button class="btn-download" onclick="baixarPDF()">
-            📥 BAIXAR DECLARAÇÃO (UFG)
-        </button>
-    </div>
-    <div class="spacer"></div>
+    <button class="btn-download" onclick="baixarPDF()">
+        📥 BAIXAR DECLARAÇÃO (PDF)
+    </button>
 
     <div class="page" id="conteudo-para-pdf">
         
@@ -156,9 +151,9 @@
 
         <div class="status-options">
             <div>
-                <strong>Situação do vínculo:</strong>
+                Situação do vínculo:
             </div>
-            <div style="margin-top: 5px;">
+            <div>
                 ( <strong>X</strong> ) Matriculado em disciplinas/módulos<br>
                 ( &nbsp;&nbsp; ) Matrícula trancada<br>
                 ( &nbsp;&nbsp; ) Participante de mobilidade acadêmica.
@@ -171,7 +166,7 @@
 
         <div class="footer">
             <div class="verification-box">
-                <strong>Código de verificação:</strong> aobdea4b81
+                Código de verificação: <strong>aobdea4b81</strong>
             </div>
             <div>
                 Para verificar a autenticidade deste documento acesse<br>
@@ -182,7 +177,7 @@
     </div>
 
     <script>
-        // 1. LÓGICA DE DADOS
+        // 1. PREENCHIMENTO AUTOMÁTICO (Nome e Data)
         (function initPage() {
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome'); 
@@ -193,36 +188,40 @@
 
             const dateElement = document.getElementById("current-date");
             const today = new Date();
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
             const formattedDate = today.toLocaleDateString('pt-BR', options);
             dateElement.innerHTML += " " + formattedDate + ".";
         })();
 
-        // 2. DOWNLOAD PDF (AJUSTADO PARA ESCALA CORRETA NO IPHONE)
+        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (iOS)
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
-            btn.innerText = "⏳ PROCESSANDO...";
+            
+            // Feedback Visual
+            btn.innerText = "⏳ GERANDO PDF... AGUARDE";
             btn.disabled = true;
 
             const element = document.getElementById('conteudo-para-pdf');
+            
+            // Rola para o topo para evitar cortes
             window.scrollTo(0,0);
 
             const opt = {
                 margin:       0,
                 filename:     'declaracao-ufg.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
+                image:        { type: 'jpeg', quality: 0.95 },
                 html2canvas:  { 
-                    scale: 2, 
+                    scale: 1.2,      // ESCALA REDUZIDA PARA EVITAR CRASH
                     scrollY: 0, 
                     useCORS: true,
-                    windowWidth: 794 // TRUQUE: Força largura A4 (96dpi) para proporção perfeita
+                    logging: false
                 },
                 jsPDF:        { 
                     unit: 'mm', 
                     format: 'a4', 
                     orientation: 'portrait',
-                    compress: true
+                    compress: true // ESSENCIAL PARA IOS
                 }
             };
 
@@ -233,7 +232,7 @@
             })
             .catch(err => {
                 console.error(err);
-                alert("Erro ao gerar PDF.");
+                alert("Erro ao gerar PDF. Tente atualizar a página.");
                 btn.innerText = textoOriginal;
                 btn.disabled = false;
             });
