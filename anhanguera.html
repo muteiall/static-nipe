@@ -1,230 +1,207 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Declaração Anhanguera</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaração Anhanguera</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <style>
-        /* --- ESTILOS GERAIS --- */
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #333; /* Fundo escuro */
-            font-family: Arial, Helvetica, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: auto;
-        }
+    <style>
+        /* --- ESTILOS GERAIS --- */
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #333; /* Fundo escuro para destacar a folha */
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto; /* Permite rolagem lateral */
+        }
 
-        /* --- BARRA DE BOTÕES --- */
-        .btn-container {
-            position: fixed; top: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.95); padding: 15px;
-            text-align: center; z-index: 999;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
+        /* --- BOTÃO --- */
+        .btn-container {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(0,0,0,0.9); padding: 15px;
+            text-align: center; z-index: 999;
+        }
+        .btn-download {
+            background-color: #ff6600; /* Laranja Anhanguera */
+            color: white; border: none;
+            padding: 12px 30px; font-size: 16px; border-radius: 5px;
+            cursor: pointer; font-weight: bold;
+        }
+        .btn-download:disabled { background-color: #555; cursor: wait; }
+        .spacer { height: 80px; width: 100%; }
 
-        /* Botão Download (Laranja) */
-        .btn-download {
-            background-color: #ff6600; color: white; border: none;
-            padding: 12px 25px; font-size: 14px; border-radius: 5px;
-            cursor: pointer; font-weight: bold;
-            text-transform: uppercase;
-        }
-        .btn-download:disabled { background-color: #666; cursor: wait; }
+        /* --- FOLHA A4 --- */
+        .page {
+            position: relative;
+            /* Tamanho fixo A4 */
+            width: 210mm; 
+            min-height: 297mm;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            overflow: hidden; 
+            margin: 0 auto;
+        }
 
-        /* Botão Voltar (Cinza) */
-        .btn-back {
-            background-color: #666; color: white; border: none;
-            padding: 12px 25px; font-size: 14px; border-radius: 5px;
-            cursor: pointer; font-weight: bold;
-            text-decoration: none;
-            text-transform: uppercase;
-            display: flex; align-items: center;
-        }
-        .btn-back:hover { background-color: #888; }
+        /* --- FUNDO --- */
+        .background-layer {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; z-index: 0;
+        }
+        .background-layer img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
 
-        .spacer { height: 80px; width: 100%; }
+        /* --- TEXTO --- */
+        .text-layer {
+            position: relative;
+            z-index: 1;
+            /* Ajustes de margem da imagem original */
+            padding-top: 80mm; 
+            padding-left: 25mm;
+            padding-right: 25mm;
+            color: #000;
+        }
 
-        /* --- FOLHA A4 --- */
-        .page {
-            position: relative;
-            width: 210mm;
-            height: 296mm;
-            background-color: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            overflow: hidden; 
-            margin: 0 auto;
-        }
+        /* --- FORMATAÇÃO --- */
+        h1.titulo {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        .titulo-container { text-align: center; margin-bottom: 40px; }
 
-        /* --- FUNDO --- */
-        .background-layer {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%; z-index: 0;
-        }
-        .background-layer img {
-            width: 100%; height: 100%; object-fit: cover;
-        }
+        p.corpo-texto {
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 130px;
+        }
 
-        /* --- TEXTO --- */
-        .text-layer {
-            position: relative;
-            z-index: 1;
-            padding-top: 80mm; 
-            padding-left: 25mm;
-            padding-right: 25mm;
-            color: #000;
-        }
+        .data-local {
+            text-align: right; 
+            font-size: 16px;
+            margin-bottom: 190px;
+        }
 
-        /* --- FORMATAÇÃO --- */
-        h1.titulo {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            color: #333;
-        }
-        .titulo-container { text-align: center; margin-bottom: 40px; }
-
-        p.corpo-texto {
-            font-size: 16px;
-            line-height: 1.6;
-            text-align: justify;
-            margin-bottom: 130px;
-        }
-
-        .data-local {
-            text-align: right; 
-            font-size: 16px;
-            margin-bottom: 190px;
-        }
-
-        .assinatura {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-        }
-    </style>
+        .assinatura {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="btn-container">
-        <a href="index.html" class="btn-back">⬅ Voltar</a>
-        
-        <button class="btn-download" onclick="baixarPDF()">
-            📥 Baixar PDF
-        </button>
-    </div>
-    
-    <div class="spacer"></div>
+    <div class="btn-container">
+        <button class="btn-download" onclick="baixarPDF()">
+            📥 BAIXAR DECLARAÇÃO (ANHANGUERA)
+        </button>
+    </div>
+    <div class="spacer"></div>
 
-    <div class="page" id="conteudo-para-pdf">
-        
-        <div class="background-layer">
-            <img src="fundo.jpg" alt="Fundo">
-        </div>
+    <div class="page" id="conteudo-para-pdf">
+        
+        <div class="background-layer">
+            <img src="fundo.jpg" alt="Fundo"> </div>
 
-        <div class="text-layer">
-            
-            <div class="titulo-container">
-                <h1 class="titulo">DECLARAÇÃO</h1>
-            </div>
+        <div class="text-layer">
+            
+            <div class="titulo-container">
+                <h1 class="titulo">DECLARAÇÃO</h1>
+            </div>
 
-            <p class="corpo-texto">
-                Declaro, para os devidos fins, que <strong id="nome-aluno-anhanguera">CHERLAU DA SILVA PRADO FILHO</strong>,
-                <strong>MATRÍCULA: RA00220527</strong> é aluno(a) matriculado(a) no curso de <strong>Educação Física</strong>
-                <strong id="dynamic-semester"></strong>, no Polo da Anhanguera Educacional de <strong>São Paulo/SP</strong>.
-            </p>
+            <p class="corpo-texto">
+                Declaro, para os devidos fins, que <strong id="nome-aluno-anhanguera">CHERLAU DA SILVA PRADO FILHO</strong>,
+                <strong>MATRÍCULA: RA00220527</strong> é aluno(a) matriculado(a) no curso de <strong>Educação Física</strong>
+                <strong id="dynamic-semester"></strong>, no Polo da Anhanguera Educacional de <strong>São Paulo/SP</strong>.
+            </p>
 
-            <div class="data-local" id="dynamic-date">
-                </div>
+            <div class="data-local" id="dynamic-date">
+                </div>
 
-            <div class="assinatura">
-                Auristela Gelocha – Secretária Acadêmica do Polo
-            </div>
+            <div class="assinatura">
+                Auristela Gelocha – Secretária Acadêmica do Polo
+            </div>
 
-        </div>
-    </div>
+        </div>
+    </div>
 
-    <script>
-        // 1. PREENCHIMENTO AUTOMÁTICO
-        (function autoUpdate() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const nomeNaUrl = urlParams.get('nome');
+    <script>
+        // 1. PREENCHIMENTO AUTOMÁTICO
+        (function autoUpdate() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeNaUrl = urlParams.get('nome');
 
-            if (nomeNaUrl) {
-                document.getElementById("nome-aluno-anhanguera").innerText = nomeNaUrl.toUpperCase();
-            }
+            if (nomeNaUrl) {
+                document.getElementById("nome-aluno-anhanguera").innerText = nomeNaUrl.toUpperCase();
+            }
 
-            const now = new Date();
-            const day = now.getDate();
-            const year = now.getFullYear();
-            const monthIndex = now.getMonth(); 
-            
-            const months = [
-                "janeiro", "fevereiro", "março", "abril", "maio", "junho",
-                "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
-            ];
+            const now = new Date();
+            const day = now.getDate();
+            const year = now.getFullYear();
+            const monthIndex = now.getMonth(); 
+            
+            const months = [
+                "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+                "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+            ];
 
-            let semesterText = (monthIndex < 6) ? "1º semestre" : "2º semestre";
-            const fullDateText = `São Paulo, ${day} de ${months[monthIndex]} de ${year}.`;
+            let semesterText = (monthIndex < 6) ? "1º semestre" : "2º semestre";
+            const fullDateText = `São Paulo, ${day} de ${months[monthIndex]} de ${year}.`;
 
-            document.getElementById("dynamic-semester").innerText = semesterText;
-            document.getElementById("dynamic-date").innerText = fullDateText;
-        })();
+            document.getElementById("dynamic-semester").innerText = semesterText;
+            document.getElementById("dynamic-date").innerText = fullDateText;
+        })();
 
-        // 2. DOWNLOAD PDF (CORRIGIDO PARA ESCALA CORRETA)
-        function baixarPDF() {
-            const btn = document.querySelector('.btn-download');
-            const textoOriginal = btn.innerText;
-            btn.innerText = "⏳ GERANDO PDF...";
-            btn.disabled = true;
+        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (ESCALA CORRETA)
+        function baixarPDF() {
+            const btn = document.querySelector('.btn-download');
+            const textoOriginal = btn.innerText;
+            btn.innerText = "⏳ GERANDO PDF...";
+            btn.disabled = true;
 
-            const element = document.getElementById('conteudo-para-pdf');
-            window.scrollTo(0,0);
+            const elemento = document.getElementById('conteudo-para-pdf');
+            window.scrollTo(0,0);
 
-            const options = {
-                margin:       0,
-                filename:     'declaracao-anhanguera.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2,       
-                    useCORS: true,  
-                    scrollY: 0,
-                    // O SEGREDO: windowWidth 800 corrige o tamanho no celular
-                    windowWidth: 800 
-                },
-                jsPDF:        { 
-                    unit: 'mm', 
-                    format: 'a4', 
-                    orientation: 'portrait',
-                    compress: true 
-                }
-            };
+            const options = {
+                margin:       0,
+                filename:     'declaracao-anhanguera.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2,       
+                    useCORS: true,  
+                    scrollY: 0,
+                    // O SEGREDO: windowWidth 800 corrige o tamanho no celular
+                    windowWidth: 800 
+                },
+                jsPDF:        { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait',
+                    compress: true 
+                }
+            };
 
-            html2pdf().set(options).from(elemento).save()
-            .then(() => {
-                btn.innerText = textoOriginal;
-                btn.disabled = false;
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Erro ao gerar PDF.");
-                btn.innerText = textoOriginal;
-                btn.disabled = false;
-            });
-        }
-    </script>
+            html2pdf().set(options).from(elemento).save()
+            .then(() => {
+                btn.innerText = textoOriginal;
+                btn.disabled = false;
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro ao gerar PDF.");
+                btn.innerText = textoOriginal;
+                btn.disabled = false;
+            });
+        }
+    </script>
 </body>
 </html>
-
-
-
-
