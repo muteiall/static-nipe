@@ -10,13 +10,14 @@
     <style>
         /* --- ESTILOS GERAIS --- */
         body {
-            font-family: Arial, Helvetica, sans-serif; /* Fonte padrão UFG */
+            font-family: Arial, Helvetica, sans-serif;
             background-color: #333;
             margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: auto; /* Permite rolar para ver a folha toda */
+            overflow-x: auto;
         }
 
         /* --- BOTÃO --- */
@@ -33,14 +34,12 @@
         .btn-download:disabled { background-color: #555; cursor: wait; }
         .spacer { height: 80px; width: 100%; }
 
-        /* --- FOLHA A4 (LAYOUT FIXO) --- */
+        /* --- FOLHA A4 --- */
         .page {
             background-color: white;
-            /* Tamanho exato A4 */
-            width: 210mm; 
+            width: 210mm;
             min-height: 297mm;
-            /* Margens padrão de documento oficial */
-            padding: 25mm 25mm; 
+            padding: 25mm 30mm;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             box-sizing: border-box;
             position: relative;
@@ -51,19 +50,19 @@
 
         /* --- CABEÇALHO --- */
         .header {
-            text-align: start;
+            text-align: center;
             margin-bottom: 50px;
             display: flex;
             align-items: center;
-            justify-content: start;
+            justify-content: center;
         }
         .header img {
-            width: 130px;
-            margin-right: 13px;
+            width: 90px;
+            margin-right: 20px;
         }
         .header-text {
             font-weight: 700;
-            font-size: 18px; /* Tamanho bom para cabeçalho */
+            font-size: 14px;
             line-height: 1.4;
             text-transform: uppercase;
             text-align: left;
@@ -71,17 +70,20 @@
         }
 
         /* --- TÍTULO --- */
-		.title {
+        .title {
             text-align: center;
             font-weight: bold;
-            font-size: 13px;
-            margin-bottom: 100px;
-            letter-spacing: 10px;
+            font-size: 18px;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            text-decoration: underline;
         }
+
         /* --- CONTEÚDO --- */
         .content {
+            text-align: justify;
             line-height: 1.6;
-            font-size: 12px; /* Tamanho 14 é padrão e legível */
+            font-size: 14px;
             margin-bottom: 40px;
             color: #000;
         }
@@ -89,34 +91,36 @@
         /* --- OPÇÕES DE STATUS --- */
         .status-options {
             margin-left: 0;
-            font-size: 15px;
-            margin-bottom: 40px;
-			display: flex;
-			gap: 5px;
+            font-size: 14px;
+            line-height: 2;
+            margin-bottom: 60px;
         }
         
         /* --- DATA --- */
         .date {
-            text-align: center;
-            font-size: 10px;
+            text-align: right;
+            font-size: 14px;
             margin-top: auto; 
-            margin-bottom: 70px;
+            margin-bottom: 50px;
         }
 
         /* --- RODAPÉ --- */
         .footer {
+            border-top: 1px solid #000;
             padding-top: 15px;
-            font-size: 10px;
+            font-size: 11px;
             text-align: center;
             color: #333;
             line-height: 1.4;
         }
-
         .verification-box {
+            border: 1px dashed #000;
             padding: 8px 15px;
             margin-bottom: 15px;
             display: inline-block;
-            font-size: 13px;
+            font-family: "Courier New", monospace;
+            background-color: #eee;
+            font-size: 12px;
             font-weight: bold;
         }
     </style>
@@ -144,11 +148,11 @@
         <div class="title">DECLARAÇÃO DE VÍNCULO</div>
 
         <div class="content">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Atestamos que o estudante <strong id="nome-aluno">CHERLAU DA SILVA PRADO FILHO</strong>, matrícula Nº <strong>202508911</strong> ingressou nesta Universidade, via SISTEMA DE SELEÇÃO UNIFICADA - SISU, em <strong>2021.1</strong> e encontra-se regularmente vinculado ao curso de graduação de <strong>SISTEMAS DE INFORMAÇÃO - BACHARELADO - PRESENCIAL - GOIÂNIA</strong>, turno <strong>NOTURNO</strong>.
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Atestamos que o estudante <strong id="nome-aluno">CHERLAU DA SILVA PRADO FILHO</strong>, CPF N° <strong>470.775.328-01</strong>, matrícula Nº <strong id="matricula-dinamica"></strong> ingressou nesta Universidade, via SISTEMA DE SELEÇÃO UNIFICADA - SISU, em <strong id="ano-sisu"></strong> e encontra-se regularmente vinculado ao curso de graduação de <strong>SISTEMAS DE INFORMAÇÃO - BACHARELADO - PRESENCIAL - GOIÂNIA</strong>, turno <strong>NOTURNO</strong>.
         </div>
 
         <div class="status-options">
-            <div>Situação do vínculo:</div>
+            <div><strong>Situação do vínculo:</strong></div>
             <div>
                 ( <strong>X</strong> ) Matriculado em disciplinas/módulos<br>
                 ( &nbsp;&nbsp; ) Matrícula trancada<br>
@@ -157,7 +161,7 @@
         </div>
 
         <div class="date" id="current-date">
-            UNIVERSIDADE FEDERAL DE GOIÁS, em Goiânia,
+            Goiânia, 
         </div>
 
         <div class="footer">
@@ -166,7 +170,7 @@
             </div>
             <div>
                 Para verificar a autenticidade deste documento acesse:<br>
-                <strong>https://sigaa.sistemas.ufg.br/sigaa/validacao</strong><br>
+                <strong>https://sigaa.sistemas.ufg.br/sigaa/documentos</strong><br>
                 informando a matrícula, data de emissão e o código verificador.
             </div>
         </div>
@@ -175,22 +179,32 @@
     <script>
         // 1. PREENCHIMENTO DE DADOS
         (function initPage() {
+            // Nome
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome'); 
-
             if (nomeNaUrl) {
                 document.getElementById("nome-aluno").innerText = nomeNaUrl.toUpperCase();
             }
 
-            // Data formatada
-            const dateElement = document.getElementById("current-date");
+            // Datas e Anos
             const today = new Date();
+            const currentYear = today.getFullYear();
+
+            // Cálculo: Ano Atual - 2 anos
+            const anoIngresso = currentYear - 2;
+
+            // Preencher Matrícula (Ex: 202408911) e Ano SiSU (Ex: 2024.1)
+            document.getElementById("matricula-dinamica").innerText = `${anoIngresso}08921`;
+            document.getElementById("ano-sisu").innerText = `${anoIngresso}.1`;
+
+            // Data formatada do rodapé
+            const dateElement = document.getElementById("current-date");
             const options = { day: '2-digit', month: 'long', year: 'numeric' };
             const formattedDate = today.toLocaleDateString('pt-BR', options);
             dateElement.innerHTML += formattedDate + ".";
         })();
 
-        // 2. DOWNLOAD PDF (CORRIGIDO PARA NÃO FICAR PEQUENO)
+        // 2. DOWNLOAD PDF (CORRIGIDO)
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
@@ -208,8 +222,6 @@
                     scale: 2, 
                     useCORS: true,
                     scrollY: 0,
-                    // O SEGREDO: windowWidth 800 finge ser um computador, 
-                    // impedindo que o PDF fique pequeno como a tela do celular.
                     windowWidth: 800 
                 },
                 jsPDF:        { 
