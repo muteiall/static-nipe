@@ -119,7 +119,7 @@
             font-size: 13px;
         }
 
-        /* Ajuste visual para celular (apenas visualização na tela) */
+        /* Ajuste visual para celular (apenas visualização) */
         @media (max-width: 800px) {
             .page {
                 transform: scale(0.45);
@@ -182,7 +182,6 @@
     <script>
         // 1. PREENCHIMENTO AUTOMÁTICO (Nome e Data)
         (function initPage() {
-            // Pega nome da URL (?nome=...)
             const urlParams = new URLSearchParams(window.location.search);
             const nomeNaUrl = urlParams.get('nome'); 
 
@@ -190,7 +189,6 @@
                 document.getElementById("nome-aluno").innerText = nomeNaUrl.toUpperCase();
             }
 
-            // Data atual
             const dateElement = document.getElementById("current-date");
             const today = new Date();
             const options = { day: '2-digit', month: 'long', year: 'numeric' };
@@ -209,7 +207,7 @@
 
             const element = document.getElementById('conteudo-para-pdf');
             
-            // Rola para o topo para garantir captura correta
+            // Rola para o topo para evitar cortes
             window.scrollTo(0,0);
 
             const opt = {
@@ -217,7 +215,7 @@
                 filename:     'declaracao-ufg.pdf',
                 image:        { type: 'jpeg', quality: 0.95 },
                 html2canvas:  { 
-                    scale: 1.2,      // ESCALA REDUZIDA PARA NÃO TRAVAR IPHONE
+                    scale: 1.2,      // ESCALA REDUZIDA PARA EVITAR CRASH
                     scrollY: 0, 
                     useCORS: true,
                     logging: false
@@ -226,11 +224,10 @@
                     unit: 'mm', 
                     format: 'a4', 
                     orientation: 'portrait',
-                    compress: true // ESSENCIAL
+                    compress: true // ESSENCIAL PARA IOS
                 }
             };
 
-            // Gera e Salva
             html2pdf().set(opt).from(element).save()
             .then(() => {
                 btn.innerText = textoOriginal;
