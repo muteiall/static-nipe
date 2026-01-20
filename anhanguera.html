@@ -248,10 +248,17 @@
                 }
             };
 
-            html2pdf().set(options).from(elemento).save()
+            html2pdf().set(opt).from(element).save()
                 .then(() => {
+                    // SUCESSO!
                     btn.innerText = textoOriginal;
                     btn.disabled = false;
+                
+                    // AVISO PARA IPHONE (SAFARI)
+                    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                    if (isIOS) {
+                        alert("✅ PDF Gerado!\n\nSe o arquivo abriu na tela:\n1. Toque em Compartilhar (⬆️)\n2. Escolha 'Salvar em Arquivos'");
+                    }
                 })
                 .catch(err => {
                     console.error(err);
@@ -259,10 +266,11 @@
                     btn.innerText = textoOriginal;
                     btn.disabled = false;
                 });
-        }
+            }
     </script>
 
 </body>
 
 </html>
+
 
