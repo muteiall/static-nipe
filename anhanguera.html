@@ -13,12 +13,12 @@
         body {
             margin: 0;
             padding: 20px;
-            background-color: #333; /* Fundo escuro para destacar a folha */
+            background-color: #333;
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: auto; /* Permite rolagem lateral */
+            overflow-x: auto;
         }
 
         /* --- BOTÕES E INTERFACE --- */
@@ -76,7 +76,6 @@
         /* --- FOLHA A4 --- */
         .page {
             position: relative;
-            /* Tamanho fixo A4 */
             width: 210mm;
             min-height: 297mm;
             background-color: white;
@@ -85,7 +84,7 @@
             margin: 0 auto;
         }
 
-        /* --- CAMADA DE FUNDO (IMAGEM) --- */
+        /* --- CAMADA DE FUNDO --- */
         .background-layer {
             position: absolute;
             top: 0;
@@ -105,14 +104,12 @@
         .text-layer {
             position: relative;
             z-index: 1;
-            /* Ajustes de margem baseados na imagem original */
             padding-top: 80mm;
             padding-left: 25mm;
             padding-right: 25mm;
             color: #000;
         }
 
-        /* --- TIPOGRAFIA --- */
         h1.titulo {
             text-align: center;
             font-size: 24px;
@@ -171,6 +168,9 @@
 
             <p class="corpo-texto">
                 Declaro, para os devidos fins, que <strong id="nome-aluno-anhanguera">CHERLAU DA SILVA PRADO FILHO</strong>,
+                
+                inscrito(a) no CPF sob o nº <strong id="cpf-aluno">000.000.000-00</strong>,
+                
                 <strong>MATRÍCULA: RA00220527</strong> é aluno(a) matriculado(a) no curso de <strong>Educação Física</strong>
                 <strong id="dynamic-semester"></strong>, no Polo da Anhanguera Educacional de <strong>São Paulo/SP</strong>.
             </p>
@@ -187,15 +187,21 @@
     <script>
         // 1. PREENCHIMENTO AUTOMÁTICO
         (function autoUpdate() {
-            // Captura nome da URL
             const urlParams = new URLSearchParams(window.location.search);
+            
+            // NOME
             const nomeNaUrl = urlParams.get('nome');
-
             if (nomeNaUrl) {
                 document.getElementById("nome-aluno-anhanguera").innerText = nomeNaUrl.toUpperCase();
             }
 
-            // Captura Data Atual
+            // CPF (NOVO)
+            const cpfNaUrl = urlParams.get('cpf');
+            if (cpfNaUrl) {
+                document.getElementById("cpf-aluno").innerText = cpfNaUrl;
+            }
+
+            // DATA E SEMESTRE
             const now = new Date();
             const day = now.getDate();
             const year = now.getFullYear();
@@ -206,7 +212,6 @@
                 "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
             ];
 
-            // Define semestre e data formatada
             let semesterText = (monthIndex < 6) ? "1º semestre" : "2º semestre";
             const fullDateText = `São Paulo, ${day} de ${months[monthIndex]} de ${year}.`;
 
@@ -214,7 +219,7 @@
             document.getElementById("dynamic-date").innerText = fullDateText;
         })();
 
-        // 2. FUNÇÃO OTIMIZADA PARA CELULAR (ESCALA CORRETA)
+        // 2. FUNÇÃO DOWNLOAD PDF
         function baixarPDF() {
             const btn = document.querySelector('.btn-download');
             const textoOriginal = btn.innerText;
@@ -233,8 +238,7 @@
                     scale: 2,
                     useCORS: true,
                     scrollY: 0,
-                    // O SEGREDO: windowWidth 800 corrige o tamanho no celular evitando zoom excessivo
-                    windowWidth: 794
+                    windowWidth: 794 // Mantendo padrão A4 (96dpi)
                 },
                 jsPDF: {
                     unit: 'mm',
