@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaração de Vínculo - UFG</title>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -140,27 +141,26 @@
             font-size: 13px;
             font-weight: bold;
         }
+
     </style>
 </head>
+
 <body>
 
     <div class="btn-container">
         <a href="index.html" class="btn-back">⬅ Voltar</a>
-        
-        <button class="btn-download" onclick="baixarPDF()">
-            📥 Baixar PDF
-        </button>
+        <button class="btn-download" onclick="baixarPDF()">📥 BAIXAR PDF</button>
     </div>
-    
+
     <div class="spacer"></div>
 
     <div class="page" id="conteudo-para-pdf">
         
         <div class="header">
-            <img src="img.png" alt="Brasão UFG">
+            <img src="img.png" alt="Brasão UFG" />
             <div class="header-text">
-                UNIVERSIDADE FEDERAL DE GOIÁS<br>
-                PRÓ-REITORIA DE GRADUAÇÃO<br>
+                UNIVERSIDADE FEDERAL DE GOIÁS<br />
+                PRÓ-REITORIA DE GRADUAÇÃO<br />
                 CENTRO DE GESTÃO ACADÊMICA
             </div>
         </div>
@@ -168,29 +168,35 @@
         <div class="title">DECLARAÇÃO DE VÍNCULO</div>
 
         <div class="content">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Atestamos que o estudante <strong id="nome-aluno">CHERLAU DA SILVA PRADO FILHO</strong>, CPF N° <strong>470.775.328-01</strong>, matrícula Nº <strong id="matricula-dinamica"></strong> ingressou nesta Universidade, via SISTEMA DE SELEÇÃO UNIFICADA - SISU, em <strong id="ano-sisu"></strong> e encontra-se regularmente vinculado ao curso de graduação de <strong>SISTEMAS DE INFORMAÇÃO - BACHARELADO - PRESENCIAL - GOIÂNIA</strong>, turno <strong>NOTURNO</strong>.
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Atestamos que o estudante
+            <strong id="nome-aluno">CHERLAU DA SILVA PRADO FILHO</strong>, 
+            
+            CPF N° <strong id="cpf-aluno">336.483.824-03</strong>, 
+            
+            matrícula Nº <strong id="matricula-dinamica"></strong> ingressou nesta Universidade,
+            via SISTEMA DE SELEÇÃO UNIFICADA - SISU, em
+            <strong id="ano-sisu"></strong> e encontra-se regularmente vinculado ao
+            curso de graduação de
+            <strong>SISTEMAS DE INFORMAÇÃO - BACHARELADO - PRESENCIAL - GOIÂNIA</strong>, 
+            turno <strong>NOTURNO</strong>.
         </div>
 
         <div class="status-options">
-            <div>Situação do vínculo:</div>
+            <div><strong>Situação do vínculo:</strong></div>
             <div>
-                ( <strong>X</strong> ) Matriculado em disciplinas/módulos<br>
-                ( &nbsp;&nbsp; ) Matrícula trancada<br>
+                ( <strong>X</strong> ) Matriculado em disciplinas/módulos<br />
+                ( &nbsp;&nbsp; ) Matrícula trancada<br />
                 ( &nbsp;&nbsp; ) Participante de mobilidade acadêmica.
             </div>
         </div>
 
-        <div class="date" id="current-date">
-            Goiânia, 
-        </div>
+        <div class="date" id="current-date">Goiânia, </div>
 
         <div class="footer">
-            <div class="verification-box">
-                Código de verificação: aobdea4b81
-            </div>
+            <div class="verification-box">Código de verificação: aobdea4b81</div>
             <div>
-                Para verificar a autenticidade deste documento acesse:<br>
-                <strong>https://sigaa.sistemas.ufg.br/sigaa/documentos</strong><br>
+                Para verificar a autenticidade deste documento acesse:<br />
+                <strong>https://sigaa.sistemas.ufg.br/sigaa/documentos</strong><br />
                 informando a matrícula, data de emissão e o código verificador.
             </div>
         </div>
@@ -199,70 +205,75 @@
     <script>
         // 1. PREENCHIMENTO DE DADOS
         (function initPage() {
-            // Nome
             const urlParams = new URLSearchParams(window.location.search);
-            const nomeNaUrl = urlParams.get('nome'); 
+            
+            // Preenche NOME
+            const nomeNaUrl = urlParams.get("nome");
             if (nomeNaUrl) {
                 document.getElementById("nome-aluno").innerText = nomeNaUrl.toUpperCase();
+            }
+
+            // Preenche CPF
+            const cpfNaUrl = urlParams.get("cpf");
+            if (cpfNaUrl) {
+                document.getElementById("cpf-aluno").innerText = cpfNaUrl;
             }
 
             // Datas e Anos
             const today = new Date();
             const currentYear = today.getFullYear();
-
-            // Cálculo: Ano Atual - 2 anos
             const anoIngresso = currentYear - 2;
 
-            // Preencher Matrícula e Ano SiSU
             document.getElementById("matricula-dinamica").innerText = `${anoIngresso}08921`;
             document.getElementById("ano-sisu").innerText = `${anoIngresso}.1`;
 
-            // Data formatada do rodapé
+            // Data formatada
             const dateElement = document.getElementById("current-date");
-            const options = { day: '2-digit', month: 'long', year: 'numeric' };
-            const formattedDate = today.toLocaleDateString('pt-BR', options);
+            const options = { day: "2-digit", month: "long", year: "numeric" };
+            const formattedDate = today.toLocaleDateString("pt-BR", options);
             dateElement.innerHTML += formattedDate + ".";
         })();
 
         // 2. DOWNLOAD PDF
         function baixarPDF() {
-            const btn = document.querySelector('.btn-download');
+            const btn = document.querySelector(".btn-download");
             const textoOriginal = btn.innerText;
+
             btn.innerText = "⏳ GERANDO PDF...";
             btn.disabled = true;
 
-            const element = document.getElementById('conteudo-para-pdf');
-            window.scrollTo(0,0);
+            const element = document.getElementById("conteudo-para-pdf");
+            window.scrollTo(0, 0);
 
             const opt = {
-                margin:       0,
-                filename:     'declaracao-ufg.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2, 
+                margin: 0,
+                filename: "declaracao-ufg.pdf",
+                image: { type: "jpeg", quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
                     useCORS: true,
                     scrollY: 0,
-                    windowWidth: 800 
+                    windowWidth: 794, 
                 },
-                jsPDF:        { 
-                    unit: 'mm', 
-                    format: 'a4', 
-                    orientation: 'portrait',
-                    compress: true
-                }
+                jsPDF: {
+                    unit: "mm",
+                    format: "a4",
+                    orientation: "portrait",
+                    compress: true,
+                },
             };
 
-            html2pdf().set(options).from(elemento).save()
-            .then(() => {
-                btn.innerText = textoOriginal;
-                btn.disabled = false;
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Erro ao gerar PDF.");
-                btn.innerText = textoOriginal;
-                btn.disabled = false;
-            });
+            html2pdf().set(opt).from(element).save()
+                .then(() => {
+                    btn.innerText = textoOriginal;
+                    btn.disabled = false;
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("Erro ao gerar PDF.");
+                    btn.innerText = textoOriginal;
+                    btn.disabled = false;
+                });
         }
     </script>
 </body>
